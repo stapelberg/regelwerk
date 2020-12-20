@@ -174,8 +174,8 @@ func regelwerk() error {
 	}
 
 	var loops []controlLoop
-	if false && host == "midna" {
-		// TODO: move doornotify logic into this
+	if host == "midna" {
+		loops = append(loops, &doorNotifyLoop{})
 		// TODO: move ringdecode logic into this
 	} else {
 		loops = append(loops, &avrPowerLoop{})
