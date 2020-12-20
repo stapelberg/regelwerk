@@ -40,15 +40,5 @@ func (l *hallwayLight) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil
 	}
 
-	payload := "OFF"
-	// if anyoneHome {
-	// 	payload = "ON"
-	// }
-	return []MQTTPublish{
-		{
-			Topic:    "cmnd/tasmota_68462F/Power",
-			Payload:  payload,
-			Retained: true,
-		},
-	}
+	return nil
 }
