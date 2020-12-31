@@ -181,6 +181,7 @@ func regelwerk() error {
 		loops = append(loops, &avrPowerLoop{})
 		loops = append(loops, &tradfriSink{})
 		loops = append(loops, &hallwayLight{})
+		loops = append(loops, &nukiRTOLoop{})
 	}
 
 	dh := &debugHandler{

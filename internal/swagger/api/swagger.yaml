@@ -1,0 +1,5559 @@
+---
+swagger: "2.0"
+info:
+  version: "v1"
+  title: "Nuki API"
+  termsOfService: "http://www.github.com/kongchen/swagger-maven-plugin"
+  contact:
+    name: "Nuki"
+    url: "https://nuki.io"
+    email: "contact@nuki.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "api.nuki.io"
+basePath: "/"
+tags:
+- name: "Account"
+- name: "AccountSubscription"
+- name: "AccountUser"
+- name: "Address"
+- name: "AddressReservation"
+- name: "AddressToken"
+- name: "AdvancedApi"
+- name: "ApiKey"
+- name: "Company"
+- name: "Notification"
+- name: "Opener"
+- name: "Service"
+- name: "Smartlock"
+- name: "SmartlockAuth"
+- name: "SmartlockLog"
+- name: "Subscription"
+schemes:
+- "https"
+paths:
+  /account:
+    get:
+      tags:
+      - "Account"
+      summary: "Get an account"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/MyAccount"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    post:
+      tags:
+      - "Account"
+      summary: "Update an account"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountUpdate"
+        x-exportParamName: "Body"
+      - name: "deleteApiTokens"
+        in: "query"
+        description: "If false existing API tokens are not deleted if the password\
+          \ is changed"
+        required: false
+        type: "boolean"
+        default: true
+        x-exportParamName: "DeleteApiTokens"
+        x-optionalDataType: "Bool"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid E-Mail address or name supplied"
+        "401":
+          description: "Not authorized"
+        "409":
+          description: "E-Mail address already exists"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "Account"
+      summary: "Create an account"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountCreate"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid E-Mail address, password or name supplied"
+      security:
+      - api_key: []
+    delete:
+      tags:
+      - "Account"
+      summary: "Delete an account"
+      description: ""
+      operationId: "delete"
+      parameters: []
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/otp:
+    post:
+      tags:
+      - "Account"
+      summary: "Enables one time password for an account"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account one time password enable representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountOtpEnable"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "One time password empty"
+        "401":
+          description: "Not authorized or one time password wrong"
+        "429":
+          description: "Too many failed attempts"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "Account"
+      summary: "Create an one time password secret"
+      description: ""
+      operationId: "put"
+      parameters: []
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "string"
+        "405":
+          description: "One time password is already enabled"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "Account"
+      summary: "Disables one time password for an account"
+      description: ""
+      operationId: "delete"
+      parameters: []
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/password/reset:
+    post:
+      tags:
+      - "Account"
+      summary: "Reset account password"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account password reset representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountPasswordReset"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - api_key: []
+  /account/setting:
+    get:
+      tags:
+      - "Account"
+      summary: "Get account setting"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AccountSetting"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not found"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "Account"
+      summary: "Create or update account setting"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account setting representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountSetting"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AccountSetting"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "Account"
+      summary: "Delete an account setting"
+      description: ""
+      operationId: "delete"
+      parameters: []
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "account"
+  /account/sub:
+    get:
+      tags:
+      - "Account"
+      summary: "Get an list of sub accounts"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "The optional email (regex)"
+        required: false
+        type: "string"
+        x-exportParamName: "Email"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Account"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "Account"
+      summary: "Create an sub account"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account sub create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountSubCreate"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/MyAccount"
+        "400":
+          description: "Invalid parameter supplied"
+      security:
+      - oauth:
+        - "account"
+  /account/sub/{accountId}:
+    get:
+      tags:
+      - "Account"
+      summary: "Get an sub account"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "accountId"
+        in: "path"
+        description: "The account id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Account"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    post:
+      tags:
+      - "Account"
+      summary: "Update an sub account"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountSubUpdate"
+        x-exportParamName: "Body"
+      - name: "accountId"
+        in: "path"
+        description: "The account id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid parameter supplied"
+        "401":
+          description: "Not authorized"
+        "409":
+          description: "E-Mail address already exists"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "Account"
+      summary: "Delete an sub account"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "accountId"
+        in: "path"
+        description: "The account id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/subscription/pay:
+    post:
+      tags:
+      - "AccountSubscription"
+      summary: "Starts a payment for an account and returns a payment url"
+      description: ""
+      operationId: "post"
+      parameters: []
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "string"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/subscription/{id}/activate:
+    post:
+      tags:
+      - "AccountSubscription"
+      summary: "Activates a previously terminated subscription"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The account subscription unique id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/subscription/{id}/terminate:
+    post:
+      tags:
+      - "AccountSubscription"
+      summary: "Terminates a running subscription"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The account subscription unique id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /account/user:
+    get:
+      tags:
+      - "AccountUser"
+      summary: "Get an list of account users"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "Filter for email"
+        required: false
+        type: "string"
+        x-exportParamName: "Email"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AccountUser"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+        - "smartlock.auth"
+    put:
+      tags:
+      - "AccountUser"
+      summary: "Create an account user"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account sub create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountUserCreate"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/AccountUser"
+        "400":
+          description: "Invalid E-Mail address or name supplied"
+      security:
+      - oauth:
+        - "account"
+        - "smartlock.auth"
+  /account/user/{accountUserId}:
+    get:
+      tags:
+      - "AccountUser"
+      summary: "Get an account user"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "accountUserId"
+        in: "path"
+        description: "The account user id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AccountUser"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+        - "smartlock.auth"
+    post:
+      tags:
+      - "AccountUser"
+      summary: "Update an account user"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Account update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AccountUserUpdate"
+        x-exportParamName: "Body"
+      - name: "accountUserId"
+        in: "path"
+        description: "The account user id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AccountUser"
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid E-Mail address or name supplied"
+        "401":
+          description: "Not authorized"
+        "409":
+          description: "E-Mail address already exists"
+      security:
+      - oauth:
+        - "account"
+        - "smartlock.auth"
+    delete:
+      tags:
+      - "AccountUser"
+      summary: "Deletes asynchronous an account user"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "accountUserId"
+        in: "path"
+        description: "The account user id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+        "423":
+          description: "Locked"
+      security:
+      - oauth:
+        - "account"
+        - "smartlock.auth"
+  /address:
+    get:
+      tags:
+      - "Address"
+      summary: "Get a list of addresses"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Address"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /address/token/{id}:
+    get:
+      tags:
+      - "AddressToken"
+      summary: "Gives some info about address token"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The token id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AddressTokenInfo"
+        "401":
+          description: "Not authorized"
+        "404":
+          description: "Token not found"
+      security:
+      - api_key: []
+  /address/token/{id}/redeem:
+    get:
+      tags:
+      - "AddressToken"
+      summary: "Gives an redeemed address token"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The token id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AddressToken"
+        "401":
+          description: "Not authorized"
+        "404":
+          description: "Token not found"
+      security:
+      - oauth:
+        - "account"
+    post:
+      tags:
+      - "AddressToken"
+      summary: "Redeems an address token"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The token id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - name: "email"
+        in: "query"
+        description: "If false no email will be send"
+        required: false
+        type: "boolean"
+        x-exportParamName: "Email"
+        x-optionalDataType: "Bool"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid parameter given"
+        "401":
+          description: "Not authorized"
+        "404":
+          description: "Token not found"
+      security:
+      - oauth:
+        - "account"
+  /address/{addressId}:
+    post:
+      tags:
+      - "Address"
+      summary: "Update an address"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Address update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AddressUpdate"
+        x-exportParamName: "Body"
+      - name: "addressId"
+        in: "path"
+        description: "The address id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AddressId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /address/{addressId}/reservation:
+    get:
+      tags:
+      - "AddressReservation"
+      summary: "Get a list of address reservations"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "addressId"
+        in: "path"
+        description: "The address id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AddressId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AddressReservation"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /address/{addressId}/reservation/{id}/issue:
+    post:
+      tags:
+      - "AddressReservation"
+      summary: "Issues authorizations for an address reservation"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "addressId"
+        in: "path"
+        description: "The address id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AddressId"
+      - name: "id"
+        in: "path"
+        description: "The address reservation id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /address/{addressId}/reservation/{id}/revoke:
+    post:
+      tags:
+      - "AddressReservation"
+      summary: "Revoke authorizations for an address reservation"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "addressId"
+        in: "path"
+        description: "The address id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AddressId"
+      - name: "id"
+        in: "path"
+        description: "The address reservation id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /address/{addressId}/token:
+    get:
+      tags:
+      - "AddressToken"
+      summary: "Get a list of address tokens"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "addressId"
+        in: "path"
+        description: "The address id"
+        required: true
+        type: "integer"
+        x-exportParamName: "AddressId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AddressToken"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+  /api/key:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Get a list of api keys"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ApiKey"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "ApiKey"
+      summary: "Create an api key"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Api key create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/ApiKeyCreate"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/ApiKey"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /api/key/{apiKeyId}:
+    post:
+      tags:
+      - "ApiKey"
+      summary: "Update an api key"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Api key update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/ApiKeyUpdate"
+        x-exportParamName: "Body"
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid parameter given"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete an api key"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /api/key/{apiKeyId}/advanced:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Get an advanced api key"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/AdvancedApiKey"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not found"
+      security:
+      - oauth:
+        - "account"
+    post:
+      tags:
+      - "ApiKey"
+      summary: "Update an advanced api key"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Update for advaced api key representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AdvancedApiKeyUpdate"
+        x-exportParamName: "Body"
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "ApiKey"
+      summary: "Create an advanced api key"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Apply for advaced api key representation"
+        required: true
+        schema:
+          $ref: "#/definitions/AdvancedApiKeyCreate"
+        x-exportParamName: "Body"
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete an advanced api key"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /api/key/{apiKeyId}/token:
+    get:
+      tags:
+      - "ApiKey"
+      summary: "Get a list of api key tokens"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ApiKeyToken"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    put:
+      tags:
+      - "ApiKey"
+      summary: "Create an api key token"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Api key token create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/ApiKeyTokenCreate"
+        x-exportParamName: "Body"
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/ApiKeyToken"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /api/key/{apiKeyId}/token/{id}:
+    post:
+      tags:
+      - "ApiKey"
+      summary: "Update an api key token"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Api key token update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/ApiKeyTokenUpdate"
+        x-exportParamName: "Body"
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      - name: "id"
+        in: "path"
+        description: "The api key token id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid parameter given"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+    delete:
+      tags:
+      - "ApiKey"
+      summary: "Delete an api key token"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "apiKeyId"
+        in: "path"
+        description: "The api key id"
+        required: true
+        type: "integer"
+        x-exportParamName: "ApiKeyId"
+      - name: "id"
+        in: "path"
+        description: "The api key token id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /app/account/subscription:
+    get:
+      tags:
+      - "AccountSubscription"
+      summary: "Get a list of account subscriptions"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AccountSubscription"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /company:
+    get:
+      tags:
+      - "Company"
+      summary: "Get an list of companies"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Company"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Not allowed"
+      security:
+      - oauth: []
+  /notification:
+    get:
+      tags:
+      - "Notification"
+      summary: "Get all notifications attached to your account"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "referenceId"
+        in: "query"
+        description: "The reference ID to the third party system"
+        required: false
+        type: "string"
+        x-exportParamName: "ReferenceId"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Notification"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.log"
+    put:
+      tags:
+      - "Notification"
+      summary: "Create a notification configuration"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Notification representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Notification"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Notification"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock.log"
+  /notification/{notificationId}:
+    get:
+      tags:
+      - "Notification"
+      summary: "Get a notification configuration"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "notificationId"
+        in: "path"
+        description: "The unique notification ID"
+        required: true
+        type: "string"
+        x-exportParamName: "NotificationId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Notification"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not found"
+      security:
+      - oauth:
+        - "smartlock.log"
+    post:
+      tags:
+      - "Notification"
+      summary: "Update a notification configuration"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Notification update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Notification"
+        x-exportParamName: "Body"
+      - name: "notificationId"
+        in: "path"
+        description: "The unique notification ID"
+        required: true
+        type: "string"
+        x-exportParamName: "NotificationId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Notification"
+        "400":
+          description: "Invalid parameter given"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock.log"
+    delete:
+      tags:
+      - "Notification"
+      summary: "Delete a notification configuration"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "notificationId"
+        in: "path"
+        description: "The unique notification ID"
+        required: true
+        type: "string"
+        x-exportParamName: "NotificationId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "405":
+          description: "Not allowed"
+      security:
+      - oauth:
+        - "smartlock.log"
+  /opener/brand:
+    get:
+      tags:
+      - "Opener"
+      summary: "Get all intercom brands"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/OpenerIntercomBrand"
+  /opener/brand/{brandId}:
+    get:
+      tags:
+      - "Opener"
+      summary: "Get an intercom brand"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "brandId"
+        in: "path"
+        description: "The brand ID"
+        required: true
+        type: "integer"
+        x-exportParamName: "BrandId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/OpenerIntercomBrand"
+  /opener/intercom:
+    get:
+      tags:
+      - "Opener"
+      summary: "Get a list of intercom models"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "brandId"
+        in: "query"
+        description: "Filter for brandId. Required if 'recentlyChanged' is not set"
+        required: false
+        type: "integer"
+        x-exportParamName: "BrandId"
+        x-optionalDataType: "Int32"
+      - name: "ignoreVerified"
+        in: "query"
+        description: "If true, return intercoms ignoring their verified value"
+        required: false
+        type: "boolean"
+        x-exportParamName: "IgnoreVerified"
+        x-optionalDataType: "Bool"
+      - name: "recentlyChanged"
+        in: "query"
+        description: "If true, return all intercoms which recently were updated"
+        required: false
+        type: "boolean"
+        x-exportParamName: "RecentlyChanged"
+        x-optionalDataType: "Bool"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/OpenerIntercomModel"
+  /opener/intercom/{intercomId}:
+    get:
+      tags:
+      - "Opener"
+      summary: "Get an intercom model"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "intercomId"
+        in: "path"
+        description: "The intercom ID"
+        required: true
+        type: "integer"
+        x-exportParamName: "IntercomId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/OpenerIntercomModel"
+  /service/{serviceId}:
+    get:
+      tags:
+      - "Service"
+      summary: "Get a service"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "The service id"
+        required: true
+        type: "string"
+        x-exportParamName: "ServiceId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Service"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /service/{serviceId}/link:
+    post:
+      tags:
+      - "Service"
+      summary: "Links a service"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "The service id"
+        required: true
+        type: "string"
+        x-exportParamName: "ServiceId"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            type: "string"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /service/{serviceId}/sync:
+    post:
+      tags:
+      - "Service"
+      summary: "Syncs a service"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "The service id"
+        required: true
+        type: "string"
+        x-exportParamName: "ServiceId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /service/{serviceId}/unlink:
+    post:
+      tags:
+      - "Service"
+      summary: "Unlinks a service"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "The service id"
+        required: true
+        type: "string"
+        x-exportParamName: "ServiceId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /smartlock:
+    get:
+      tags:
+      - "Smartlock"
+      summary: "Get a list of smartlocks"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "authId"
+        in: "query"
+        description: "Filter for authId"
+        required: false
+        type: "integer"
+        x-exportParamName: "AuthId"
+        x-optionalDataType: "Int32"
+      - name: "type"
+        in: "query"
+        description: "Filter for type"
+        required: false
+        type: "integer"
+        x-exportParamName: "Type_"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Smartlock"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock"
+        - "smartlock.readOnly"
+    put:
+      tags:
+      - "Smartlock"
+      summary: "Create a smartlock"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockCreate"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Smartlock"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "Smartlock already exists"
+      security:
+      - oauth:
+        - "smartlock"
+        - "smartlock.create"
+  /smartlock/auth:
+    get:
+      tags:
+      - "SmartlockAuth"
+      summary: "Get a list of smartlock authorizations for your smartlocks"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "accountUserId"
+        in: "query"
+        description: "Filter for account users:  set to a positive number will filter\
+          \ for authorizations with this specific accountUserId, set to a negative\
+          \ number will filter without set accountUserId"
+        required: false
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+        x-optionalDataType: "Int32"
+      - name: "types"
+        in: "query"
+        description: "Filter for authorization's types (comma-separated eg: 0,2,3)"
+        required: false
+        type: "string"
+        x-exportParamName: "Types"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SmartlockAuth"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    post:
+      tags:
+      - "SmartlockAuth"
+      summary: "Updates smartlock authorizations asynchronously"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization update representations"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/SmartlockAuthMultiUpdate"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "Parameter conflicts"
+        "423":
+          description: "Locked"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    put:
+      tags:
+      - "SmartlockAuth"
+      summary: "Creates asynchronous smartlock authorizations"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlocksAuthCreate"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "402":
+          description: "Account not payed"
+        "409":
+          description: "Parameter conflicts"
+        "426":
+          description: "Account upgrade required"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    delete:
+      tags:
+      - "SmartlockAuth"
+      summary: "Deletes smartlock authorizations asynchronously"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization IDS to delete"
+        required: true
+        schema:
+          type: "array"
+          items:
+            type: "string"
+        x-exportParamName: "Body"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "423":
+          description: "Locked"
+      security:
+      - oauth:
+        - "smartlock.auth"
+  /smartlock/auth/advanced:
+    put:
+      tags:
+      - "AdvancedApi"
+      summary: "Creates asynchronous smartlock authorizations"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlocksAuthAdvancedCreate"
+        x-exportParamName: "Body"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/AdvancedConfirmationResponse"
+        "400":
+          description: "Bad parameter"
+        "402":
+          description: "Account not payed"
+        "409":
+          description: "Parameter conflicts"
+        "426":
+          description: "Account upgrade required"
+      security:
+      - oauth:
+        - "smartlock.auth"
+  /smartlock/log:
+    get:
+      tags:
+      - "SmartlockLog"
+      summary: "Get a list of smartlock logs for all of your smartlocks"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "accountUserId"
+        in: "query"
+        description: "Filter for account users"
+        required: false
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+        x-optionalDataType: "Int32"
+      - name: "fromDate"
+        in: "query"
+        description: "Filter for date (RFC3339)"
+        required: false
+        type: "string"
+        x-exportParamName: "FromDate"
+        x-optionalDataType: "String"
+      - name: "toDate"
+        in: "query"
+        description: "Filter for date (RFC3339)"
+        required: false
+        type: "string"
+        x-exportParamName: "ToDate"
+        x-optionalDataType: "String"
+      - name: "action"
+        in: "query"
+        description: "Filter for action"
+        required: false
+        type: "integer"
+        x-exportParamName: "Action"
+        x-optionalDataType: "Int32"
+      - name: "id"
+        in: "query"
+        description: "Filter for older logs"
+        required: false
+        type: "integer"
+        x-exportParamName: "Id"
+        x-optionalDataType: "Int32"
+      - name: "limit"
+        in: "query"
+        description: "Amount of logs (max: 50)"
+        required: false
+        type: "integer"
+        default: 20
+        x-exportParamName: "Limit"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SmartlockLog"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.log"
+  /smartlock/{smartlockId}:
+    get:
+      tags:
+      - "Smartlock"
+      summary: "Get a smartlock"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Smartlock"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not found"
+      security:
+      - oauth:
+        - "smartlock"
+        - "smartlock.readOnly"
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Update a smartlock"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockUpdate"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Invalid parameter given"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock"
+    delete:
+      tags:
+      - "Smartlock"
+      summary: "Delete a smartlock"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock"
+  /smartlock/{smartlockId}/action:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Lock & unlock a smartlock with options"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock action representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockAction"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "402":
+          description: "Account not payed"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/action/advanced:
+    post:
+      tags:
+      - "AdvancedApi"
+      summary: "Smartlock Action with Callback"
+      description: ""
+      operationId: "action"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock action representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockAction"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/AdvancedConfirmationResponse"
+        "400":
+          description: "Bad parameter"
+        "402":
+          description: "Account not payed"
+        "409":
+          description: "Parameter conflicts"
+        "426":
+          description: "Account upgrade required"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/action/lock:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Lock a smartlock"
+      description: ""
+      operationId: "postLock"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "405":
+          description: "Not allowed"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/action/lock/advanced:
+    post:
+      tags:
+      - "AdvancedApi"
+      summary: "Lock a smartlock"
+      description: ""
+      operationId: "postLock"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/AdvancedConfirmationResponse"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "405":
+          description: "Not allowed"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/action/unlock:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Unlock a smartlock"
+      description: ""
+      operationId: "postUnlock"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "405":
+          description: "Not allowed"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/action/unlock/advanced:
+    post:
+      tags:
+      - "AdvancedApi"
+      summary: "Unlock a smartlock"
+      description: ""
+      operationId: "postLock"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "200":
+          description: "Ok"
+          schema:
+            $ref: "#/definitions/AdvancedConfirmationResponse"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+        "405":
+          description: "Not allowed"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/admin/pin:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates a smartlock admin pin"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock admin pin update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockAdminPinUpdate"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /smartlock/{smartlockId}/advanced/config:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates a smartlock advanced config"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock config update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Smartlock.AdvancedConfig"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /smartlock/{smartlockId}/advanced/openerconfig:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates an opener advanced config"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Opener advanced config update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Smartlock.OpenerAdvancedConfig"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock (opener) id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /smartlock/{smartlockId}/advanced/smartdoorconfig:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates a smartdoor advanced config"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartdoor advanced config update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Smartlock.SmartdoorAdvancedConfig"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartdoor id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /smartlock/{smartlockId}/auth:
+    get:
+      tags:
+      - "SmartlockAuth"
+      summary: "Get a list of smartlock authorizations"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      - name: "types"
+        in: "query"
+        description: "Filter for smartlock authorization's types (comma-separated\
+          \ eg: 0,2,3)"
+        required: false
+        type: "string"
+        x-exportParamName: "Types"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SmartlockAuth"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    put:
+      tags:
+      - "SmartlockAuth"
+      summary: "Creates asynchronous a smartlock authorization"
+      description: ""
+      operationId: "put"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization create representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockAuthCreate"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "402":
+          description: "Account not payed"
+        "409":
+          description: "Parameter conflicts"
+        "426":
+          description: "Account upgrade required"
+      security:
+      - oauth:
+        - "smartlock.auth"
+  /smartlock/{smartlockId}/auth/{id}:
+    get:
+      tags:
+      - "SmartlockAuth"
+      summary: "Get a smartlock authorization"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      - name: "id"
+        in: "path"
+        description: "The smartlock auth unique id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SmartlockAuth"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    post:
+      tags:
+      - "SmartlockAuth"
+      summary: "Updates asynchronous a smartlock authorization"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock authorization update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/SmartlockAuthUpdate"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      - name: "id"
+        in: "path"
+        description: "The smartlock authorization unique id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "409":
+          description: "Parameter conflicts"
+        "423":
+          description: "Locked"
+      security:
+      - oauth:
+        - "smartlock.auth"
+    delete:
+      tags:
+      - "SmartlockAuth"
+      summary: "Deletes asynchronous a smartlock authorization"
+      description: ""
+      operationId: "delete"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      - name: "id"
+        in: "path"
+        description: "The smartlock authorization unique id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      responses:
+        "204":
+          description: "Ok"
+        "401":
+          description: "Not authorized"
+        "403":
+          description: "Forbidden"
+        "423":
+          description: "Locked"
+      security:
+      - oauth:
+        - "smartlock.auth"
+  /smartlock/{smartlockId}/config:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates a smartlock config"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock config update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Smartlock.Config"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /smartlock/{smartlockId}/log:
+    get:
+      tags:
+      - "SmartlockLog"
+      summary: "Get a list of smartlock logs"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      - name: "authId"
+        in: "query"
+        description: "Filter for auths"
+        required: false
+        type: "string"
+        x-exportParamName: "AuthId"
+        x-optionalDataType: "String"
+      - name: "accountUserId"
+        in: "query"
+        description: "Filter for account users"
+        required: false
+        type: "integer"
+        x-exportParamName: "AccountUserId"
+        x-optionalDataType: "Int32"
+      - name: "fromDate"
+        in: "query"
+        description: "Filter for date (RFC3339)"
+        required: false
+        type: "string"
+        x-exportParamName: "FromDate"
+        x-optionalDataType: "String"
+      - name: "toDate"
+        in: "query"
+        description: "Filter for date (RFC3339)"
+        required: false
+        type: "string"
+        x-exportParamName: "ToDate"
+        x-optionalDataType: "String"
+      - name: "action"
+        in: "query"
+        description: "Filter for action"
+        required: false
+        type: "integer"
+        x-exportParamName: "Action"
+        x-optionalDataType: "Int32"
+      - name: "id"
+        in: "query"
+        description: "Filter for older logs"
+        required: false
+        type: "string"
+        x-exportParamName: "Id"
+        x-optionalDataType: "String"
+      - name: "limit"
+        in: "query"
+        description: "Amount of logs (max: 50)"
+        required: false
+        type: "integer"
+        default: 20
+        x-exportParamName: "Limit"
+        x-optionalDataType: "Int32"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SmartlockLog"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.log"
+  /smartlock/{smartlockId}/sync:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Syncs a smartlock"
+      description: ""
+      operationId: "post"
+      parameters:
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "string"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad Parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.action"
+  /smartlock/{smartlockId}/web/config:
+    post:
+      tags:
+      - "Smartlock"
+      summary: "Updates a smartlock web config"
+      description: ""
+      operationId: "post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Smartlock web config update representation"
+        required: true
+        schema:
+          $ref: "#/definitions/Smartlock.WebConfig"
+        x-exportParamName: "Body"
+      - name: "smartlockId"
+        in: "path"
+        description: "The smartlock id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SmartlockId"
+      responses:
+        "204":
+          description: "Ok"
+        "400":
+          description: "Bad parameter"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "smartlock.config"
+  /subscription:
+    get:
+      tags:
+      - "Subscription"
+      summary: "Get a list of subscriptions"
+      description: ""
+      operationId: "get"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Subscription"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+  /subscription/{subscriptionId}:
+    get:
+      tags:
+      - "Subscription"
+      summary: "Get a subscription"
+      description: ""
+      operationId: "get"
+      parameters:
+      - name: "subscriptionId"
+        in: "path"
+        description: "The subscription id"
+        required: true
+        type: "integer"
+        x-exportParamName: "SubscriptionId"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Subscription"
+        "401":
+          description: "Not authorized"
+      security:
+      - oauth:
+        - "account"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "Api-key"
+    in: "header"
+  oauth:
+    type: "oauth2"
+    authorizationUrl: "/oauth/authorize"
+    flow: "implicit"
+    scopes:
+      account: "View and manage your account"
+      notification: "View and manage your notifications"
+      smartlock: "View and manage your smartlocks"
+      smartlock.readOnly: "View your smartlocks"
+      smartlock.action: "Operate your smartlocks"
+      smartlock.auth: "View and manage your smartlock authorizations"
+      smartlock.config: "Manage your smartlock config"
+      smartlock.log: "View your activity logs and get log notifications"
+      smartlock.create: "Create smartlocks"
+definitions:
+  Account:
+    type: "object"
+    required:
+    - "accountId"
+    - "creationDate"
+    - "email"
+    - "name"
+    - "type"
+    - "updateDate"
+    properties:
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type: 0 .. user, 1 .. company, 2 .. caretaker"
+        minimum: 0
+        maximum: 2
+      email:
+        type: "string"
+        description: "The email address"
+      name:
+        type: "string"
+        description: "The name"
+      masterAccountId:
+        type: "integer"
+        format: "int32"
+        description: "The master account id if it's a sub account"
+      rights:
+        type: "integer"
+        format: "int32"
+        description: "The rights bitmask if it's a sub account: 1 .. manage smartlock,\
+          \ 2 .. operate smartlock, 4 .. manage smartlock config, 8 .. manage smartlock\
+          \ authorizations, 16 .. view smartlock logs, 32 .. manage sub accounts,\
+          \ 64 .. create smartlocks"
+        minimum: 0
+        maximum: 127
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      config:
+        description: "The optional config"
+        $ref: "#/definitions/Account.Config"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      accountId: 0
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      rights: 75
+      profile:
+        zip: "zip"
+        firstName: "firstName"
+        lastName: "lastName"
+        country: "country"
+        address: "address"
+        city: "city"
+      name: "name"
+      language: "de"
+      type: 1
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      masterAccountId: 1
+      config:
+        otpEnabledDate: "2000-01-23T04:56:07.000+00:00"
+        alexaPin: "alexaPin"
+        gactionsHomePin: "gactionsHomePin"
+      email: "email"
+  Account.Config:
+    type: "object"
+    required:
+    - "alexaPin"
+    - "gactionsHomePin"
+    properties:
+      alexaPin:
+        type: "string"
+        description: "The alexa pin - used by alexa for unlock actions"
+      gactionsHomePin:
+        type: "string"
+        description: "The google smart home pin - used for unlock actions"
+      otpEnabledDate:
+        type: "string"
+        format: "date-time"
+        description: "The opt enabled date"
+    example:
+      otpEnabledDate: "2000-01-23T04:56:07.000+00:00"
+      alexaPin: "alexaPin"
+      gactionsHomePin: "gactionsHomePin"
+  Account.Profile:
+    type: "object"
+    required:
+    - "address"
+    - "city"
+    - "country"
+    - "firstName"
+    - "lastName"
+    - "zip"
+    properties:
+      firstName:
+        type: "string"
+        description: "The first name"
+      lastName:
+        type: "string"
+        description: "The last name"
+      address:
+        type: "string"
+        description: "The address"
+      zip:
+        type: "string"
+        description: "The postal code"
+      city:
+        type: "string"
+        description: "The city"
+      country:
+        type: "string"
+        description: "The 2-letter country code"
+    example:
+      zip: "zip"
+      firstName: "firstName"
+      lastName: "lastName"
+      country: "country"
+      address: "address"
+      city: "city"
+  AccountCreate:
+    type: "object"
+    required:
+    - "email"
+    - "language"
+    - "name"
+    - "password"
+    properties:
+      email:
+        type: "string"
+        description: "The email address"
+      password:
+        type: "string"
+        description: "The password (must be at least 5 chars long)"
+      name:
+        type: "string"
+        description: "The name"
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+  AccountOtpEnable:
+    type: "object"
+    required:
+    - "otp"
+    properties:
+      otp:
+        type: "string"
+        description: "The one time password (otp)"
+  AccountPasswordReset:
+    type: "object"
+    required:
+    - "email"
+    properties:
+      email:
+        type: "string"
+  AccountSetting:
+    type: "object"
+    properties:
+      web:
+        description: "The account settings for Nuki Web"
+        $ref: "#/definitions/AccountSetting.Web"
+    example:
+      web:
+        deviceViewType: "LIST"
+        nukiClubDismissed: true
+        deviceSortType: "FAVOURITES_FIRST"
+  AccountSetting.Web:
+    type: "object"
+    properties:
+      deviceViewType:
+        type: "string"
+        description: "The initial view type of the device page"
+        enum:
+        - "LIST"
+        - "TILE"
+      deviceSortType:
+        type: "string"
+        description: "The initial sort type of the device page"
+        enum:
+        - "FAVOURITES_FIRST"
+        - "NAME_ASC"
+        - "NAME_DESC"
+        - "LAST_ADDED_DESC"
+      nukiClubDismissed:
+        type: "boolean"
+        description: "If true, Nuki Club info is dismissed and no banner is shown"
+    example:
+      deviceViewType: "LIST"
+      nukiClubDismissed: true
+      deviceSortType: "FAVOURITES_FIRST"
+  AccountSubCreate:
+    type: "object"
+    required:
+    - "email"
+    - "language"
+    - "name"
+    - "password"
+    - "rights"
+    properties:
+      email:
+        type: "string"
+        example: "test@test.at"
+        description: "The email address"
+      password:
+        type: "string"
+        description: "The password (must be at least 5 chars long)"
+      name:
+        type: "string"
+        description: "The name of the sub account"
+      rights:
+        type: "integer"
+        format: "int32"
+        description: "The right bitmask of the sub account: 1 .. operate smartlock,\
+          \ 2 .. change smartlock config, 4 .. manage smartlock users, 8 .. view smartlock\
+          \ logs, 16 .. manage sub accounts"
+        minimum: 0
+        maximum: 31
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+  AccountSubUpdate:
+    type: "object"
+    required:
+    - "language"
+    properties:
+      email:
+        type: "string"
+        example: "test@test.at"
+        description: "The new email address"
+      password:
+        type: "string"
+        description: "The new password (must be at least 5 chars long)"
+      name:
+        type: "string"
+        description: "The new name of the sub account"
+      rights:
+        type: "integer"
+        format: "int32"
+        description: "The new right bitmask of the sub account: 1 .. operate smartlock,\
+          \ 2 .. change smartlock config, 4 .. manage smartlock users, 8 .. view smartlock\
+          \ logs, 16 .. manage sub accounts, 32 .. manage sub accounts, 64 .. create\
+          \ smartlocks"
+        minimum: 0
+        maximum: 127
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      config:
+        description: "The optional config"
+        $ref: "#/definitions/Account.Config"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+  AccountSubscription:
+    type: "object"
+    required:
+    - "accountId"
+    - "id"
+    - "paymentType"
+    - "period"
+    - "quantity"
+    - "status"
+    - "subscriptionId"
+    properties:
+      id:
+        description: "The id"
+        $ref: "#/definitions/ObjectId"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      subscriptionId:
+        type: "integer"
+        format: "int32"
+        description: "The subscription id"
+      period:
+        type: "integer"
+        format: "int32"
+        description: "The actual period"
+      paymentType:
+        type: "string"
+        description: "The payment type"
+        enum:
+        - "free"
+        - "paypal"
+        - "card"
+        - "account"
+      quantity:
+        type: "integer"
+        format: "int32"
+        description: "The quantity of authorizations"
+      giftArticle:
+        type: "string"
+        description: "The optional gift article after first purchase"
+      status:
+        type: "string"
+        description: "The status"
+        enum:
+        - "active"
+        - "deactivated"
+        - "finished"
+      startDate:
+        type: "integer"
+        format: "int64"
+        description: "The start date"
+      periodEndDate:
+        type: "integer"
+        format: "int64"
+        description: "The period end date"
+      nextPaymentDate:
+        type: "integer"
+        format: "int64"
+        description: "The next payment date"
+    example:
+      accountId: 7
+      period: 3
+      nextPaymentDate: 1
+      quantity: 2
+      giftArticle: "giftArticle"
+      id:
+        date: "2000-01-23T04:56:07.000+00:00"
+        machineIdentifier: 6
+        processIdentifier: 1
+        counter: 5
+        time: 5
+        timestamp: 0
+        timeSecond: 2
+      subscriptionId: 9
+      startDate: 4
+      periodEndDate: 7
+      paymentType: "free"
+      status: "active"
+  AccountUpdate:
+    type: "object"
+    required:
+    - "language"
+    properties:
+      email:
+        type: "string"
+        example: "test@test.at"
+        description: "The new email address"
+      password:
+        type: "string"
+        description: "The password (must be at least 5 chars long)"
+      name:
+        type: "string"
+        description: "The name of the account"
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      config:
+        description: "The optional config"
+        $ref: "#/definitions/Account.Config"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+  AccountUser:
+    type: "object"
+    required:
+    - "accountId"
+    - "accountUserId"
+    - "creationDate"
+    - "email"
+    - "name"
+    - "updateDate"
+    properties:
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The account user id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The optional type: 0 .. user, 1 .. company"
+        minimum: 0
+        maximum: 1
+      email:
+        type: "string"
+        description: "The email address"
+      name:
+        type: "string"
+        description: "The name"
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      accountId: 6
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      name: "name"
+      operationId: "operationId"
+      language: "de"
+      type: 0
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      email: "email"
+      accountUserId: 0
+  AccountUserCreate:
+    type: "object"
+    required:
+    - "email"
+    - "name"
+    properties:
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The optional type - only allowed for caretakers: 0 .. user,\
+          \ 1 .. company"
+        minimum: 0
+        maximum: 1
+      email:
+        type: "string"
+        description: "The email address"
+      name:
+        type: "string"
+        description: "The name"
+      language:
+        type: "string"
+        description: "The language code"
+        enum:
+        - "en"
+        - "de"
+        - "es"
+        - "fr"
+        - "it"
+        - "nl"
+        - "cs"
+        - "sk"
+  AccountUserUpdate:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "test@test.at"
+        description: "The new email address"
+      name:
+        type: "string"
+        description: "The new name of the sub account"
+      language:
+        type: "string"
+        description: "The new language code"
+        enum:
+        - "en"
+        - "de"
+        - "es"
+        - "fr"
+        - "it"
+        - "nl"
+        - "cs"
+        - "sk"
+  Address:
+    type: "object"
+    required:
+    - "accountId"
+    - "addressId"
+    - "creationDate"
+    - "name"
+    - "smartlockIds"
+    - "updateDate"
+    properties:
+      addressId:
+        type: "integer"
+        format: "int32"
+        description: "The address id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      name:
+        type: "string"
+        description: "The name of the address"
+      smartlockIds:
+        type: "array"
+        description: "The smartlocks for this address"
+        items:
+          type: "integer"
+          format: "int64"
+      serviceId:
+        type: "string"
+        description: "The optional service id if the address is from an partner service"
+        enum:
+        - "airbnb"
+        - "bookingsync"
+      timeZone:
+        type: "string"
+        description: "The timezone"
+      checkInTime:
+        type: "integer"
+        format: "int32"
+        description: "The optional check in time (minutes of the day)"
+      checkOutTime:
+        type: "integer"
+        format: "int32"
+        description: "The optional check out time (minutes of the day)"
+      settings:
+        type: "object"
+        description: "The optional settings object"
+        additionalProperties:
+          type: "object"
+          properties: {}
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      accountId: 6
+      settings:
+        key: "{}"
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      checkOutTime: 5
+      smartlockIds:
+      - 1
+      - 1
+      checkInTime: 5
+      name: "name"
+      timeZone: "timeZone"
+      serviceId: "airbnb"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      addressId: 0
+  AddressReservation:
+    type: "object"
+    required:
+    - "accountId"
+    - "addressId"
+    - "automation"
+    - "email"
+    - "endDate"
+    - "guests"
+    - "guestsIssued"
+    - "id"
+    - "keypadIssued"
+    - "name"
+    - "startDate"
+    - "state"
+    - "updateDate"
+    properties:
+      id:
+        type: "string"
+        description: "The id"
+      addressId:
+        type: "integer"
+        format: "int32"
+        description: "The address id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      email:
+        type: "string"
+        description: "The email of the guest"
+      name:
+        type: "string"
+        description: "The name of the guest"
+      guests:
+        type: "integer"
+        format: "int32"
+        description: "The number of guests"
+      guestsIssued:
+        type: "integer"
+        format: "int32"
+        description: "The number of guests issued"
+      keypadIssued:
+        type: "boolean"
+        description: "True if a keypad authorization was issued"
+      state:
+        type: "string"
+        description: "The state"
+        enum:
+        - "canceled"
+        - "accepted"
+      serviceId:
+        type: "string"
+        description: "The optional service id if the address is from an partner service"
+        enum:
+        - "airbnb"
+        - "bookingsync"
+      reference:
+        type: "string"
+        description: "The reference (booking code)"
+      automation:
+        type: "integer"
+        format: "int32"
+        description: "The automation state"
+      checkedIn:
+        type: "boolean"
+        description: "True if the user has checked in, false if the check in is pending,\
+          \ null if it isn't monitored"
+      startDate:
+        type: "string"
+        format: "date-time"
+        description: "The start date"
+      endDate:
+        type: "string"
+        format: "date-time"
+        description: "The end date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      keypadIssued: true
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      checkedIn: true
+      endDate: "2000-01-23T04:56:07.000+00:00"
+      guestsIssued: 5
+      addressId: 0
+      reference: "reference"
+      accountId: 6
+      automation: 5
+      name: "name"
+      guests: 1
+      id: "id"
+      state: "canceled"
+      serviceId: "airbnb"
+      email: "email"
+      startDate: "2000-01-23T04:56:07.000+00:00"
+  AddressToken:
+    type: "object"
+    required:
+    - "addressId"
+    - "creationDate"
+    - "id"
+    - "redeemAccountId"
+    - "redeemDate"
+    properties:
+      id:
+        type: "string"
+        description: "The id"
+      addressId:
+        type: "integer"
+        format: "int32"
+        description: "The address id"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      redeemDate:
+        type: "string"
+        format: "date-time"
+        description: "The redeem date"
+      redeemAccountId:
+        type: "integer"
+        format: "int32"
+        description: "The redeem account id"
+      inviteKeys:
+        type: "array"
+        description: "The list of invite keys"
+        items:
+          type: "string"
+      redeemResult:
+        type: "string"
+        description: "The redeem result"
+        enum:
+        - "ok"
+        - "failed"
+    example:
+      redeemDate: "2000-01-23T04:56:07.000+00:00"
+      inviteKeys:
+      - "inviteKeys"
+      - "inviteKeys"
+      redeemAccountId: 6
+      id: "id"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      addressId: 0
+      redeemResult: "ok"
+  AddressTokenInfo:
+    type: "object"
+    required:
+    - "addressName"
+    - "id"
+    - "smartlockNames"
+    properties:
+      id:
+        type: "string"
+        description: "The id"
+      addressName:
+        type: "string"
+        description: "The address name"
+      smartlockNames:
+        type: "array"
+        description: "The associated smartlock names"
+        items:
+          type: "string"
+    example:
+      smartlockNames:
+      - "smartlockNames"
+      - "smartlockNames"
+      addressName: "addressName"
+      id: "id"
+  AddressUpdate:
+    type: "object"
+    required:
+    - "smartlockIds"
+    properties:
+      smartlockIds:
+        type: "array"
+        description: "The smartlocks for this address"
+        items:
+          type: "integer"
+          format: "int64"
+      settings:
+        type: "object"
+        description: "The optional settings"
+        additionalProperties:
+          type: "object"
+          properties: {}
+  AdvancedApiKey:
+    type: "object"
+    required:
+    - "country"
+    - "creationDate"
+    - "description"
+    - "email"
+    - "name"
+    - "secret"
+    - "status"
+    - "type"
+    - "updateDate"
+    - "url"
+    - "webhookFeatures"
+    - "webhookUrl"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the company for which you apply for access"
+      country:
+        type: "string"
+        description: "The country of the headquarter or the country where you are\
+          \ mainly doing business in"
+      description:
+        type: "string"
+        description: "Describe the services and/or products you offer to your customers\
+          \ and how your customers would use Nuki devices in their processes"
+      type:
+        type: "string"
+        description: "The application type"
+        enum:
+        - "ONLY_SECRET"
+        - "SHORT_RENTAL"
+        - "HEALTHCARE"
+        - "SMART_HOME"
+        - "OTHER"
+      url:
+        type: "string"
+        description: "A website where we can find more information on the company\
+          \ and its business model"
+      email:
+        type: "string"
+        description: "An email address where we can contact you for checks on your\
+          \ application"
+      webhookUrl:
+        type: "string"
+        description: "The URL where our webhooks should point to"
+      webhookFeatures:
+        type: "array"
+        description: "The features to trigger webhooks, for all types except 'ONLY_SECRET'"
+        uniqueItems: true
+        items:
+          type: "string"
+          enum:
+          - "DEVICE_STATUS"
+          - "DEVICE_MASTERDATA"
+          - "DEVICE_CONFIG"
+          - "DEVICE_LOGS"
+          - "DEVICE_AUTHS"
+          - "ACCOUNT_USER"
+      secret:
+        type: "string"
+        description: "The client secret, visible if application is approved (status\
+          \ >= 'TESTING')"
+      status:
+        type: "string"
+        description: "The application status"
+        enum:
+        - "INACTIVE"
+        - "APPLIED"
+        - "TESTING"
+        - "ACTIVE"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      country: "country"
+      webhookFeatures:
+      - "DEVICE_STATUS"
+      - "DEVICE_STATUS"
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      name: "name"
+      description: "description"
+      secret: "secret"
+      type: "ONLY_SECRET"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      url: "url"
+      email: "email"
+      webhookUrl: "webhookUrl"
+      status: "INACTIVE"
+  AdvancedApiKeyCreate:
+    type: "object"
+    required:
+    - "country"
+    - "description"
+    - "email"
+    - "name"
+    - "type"
+    - "url"
+    - "webhookFeatures"
+    - "webhookUrl"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the company for which you apply for access"
+      country:
+        type: "string"
+        description: "The country of the headquarter or the country where you are\
+          \ mainly doing business in"
+      description:
+        type: "string"
+        description: "Describe the services and/or products you offer to your customers\
+          \ and how your customers would use Nuki devices in their processes"
+      type:
+        type: "string"
+        description: "The application type"
+        enum:
+        - "ONLY_SECRET"
+        - "SHORT_RENTAL"
+        - "HEALTHCARE"
+        - "SMART_HOME"
+        - "OTHER"
+      url:
+        type: "string"
+        description: "A website where we can find more information on the company\
+          \ and its business model"
+      email:
+        type: "string"
+        description: "An email address where we can contact you for checks on your\
+          \ application"
+      webhookUrl:
+        type: "string"
+        description: "The URL where our webhooks should point to"
+      webhookFeatures:
+        type: "array"
+        description: "The features to trigger webhooks, for all types except 'ONLY_SECRET'"
+        uniqueItems: true
+        items:
+          type: "string"
+          enum:
+          - "DEVICE_STATUS"
+          - "DEVICE_MASTERDATA"
+          - "DEVICE_CONFIG"
+          - "DEVICE_LOGS"
+          - "DEVICE_AUTHS"
+          - "ACCOUNT_USER"
+  AdvancedApiKeyUpdate:
+    type: "object"
+    required:
+    - "webhookFeatures"
+    - "webhookUrl"
+    properties:
+      webhookUrl:
+        type: "string"
+        description: "The URL where our webhooks should point to"
+      webhookFeatures:
+        type: "array"
+        description: "The features to trigger webhooks, for all types except 'ONLY_SECRET'"
+        uniqueItems: true
+        items:
+          type: "string"
+          enum:
+          - "DEVICE_STATUS"
+          - "DEVICE_MASTERDATA"
+          - "DEVICE_CONFIG"
+          - "DEVICE_LOGS"
+          - "DEVICE_AUTHS"
+          - "ACCOUNT_USER"
+  AdvancedConfirmationResponse:
+    type: "object"
+    required:
+    - "requestId"
+    properties:
+      requestId:
+        type: "string"
+        description: "A UUID to identify the upcoming asynchronously web hook response"
+    example:
+      requestId: "requestId"
+  ApiKey:
+    type: "object"
+    required:
+    - "accountId"
+    - "apiKeyId"
+    - "creationDate"
+    properties:
+      apiKeyId:
+        type: "integer"
+        format: "int32"
+        description: "The id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      description:
+        type: "string"
+        description: "The description"
+      redirectUris:
+        type: "array"
+        description: "The redirect uris"
+        items:
+          type: "string"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      apiKey:
+        type: "string"
+        description: "The api key"
+    example:
+      accountId: 6
+      apiKey: "apiKey"
+      apiKeyId: 0
+      description: "description"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      redirectUris:
+      - "redirectUris"
+      - "redirectUris"
+  ApiKeyCreate:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        description: "The description"
+      redirectUris:
+        type: "array"
+        description: "The list of redirect uris"
+        items:
+          type: "string"
+  ApiKeyToken:
+    type: "object"
+    required:
+    - "accountId"
+    - "creationDate"
+    - "id"
+    - "scopes"
+    properties:
+      id:
+        type: "string"
+        description: "The id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      description:
+        type: "string"
+        description: "The description"
+      accessToken:
+        type: "string"
+        description: "The access token"
+      scopes:
+        type: "array"
+        description: "The list of scopes"
+        items:
+          type: "string"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+    example:
+      accountId: 0
+      description: "description"
+      id: "id"
+      scopes:
+      - "scopes"
+      - "scopes"
+      accessToken: "accessToken"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+  ApiKeyTokenCreate:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        description: "The description"
+      scopes:
+        type: "array"
+        description: "The list of scopes"
+        items:
+          type: "string"
+  ApiKeyTokenUpdate:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        description: "The description"
+      scopes:
+        type: "array"
+        description: "The list of scopes"
+        items:
+          type: "string"
+  ApiKeyUpdate:
+    type: "object"
+    properties:
+      description:
+        type: "string"
+        description: "The description"
+      redirectUris:
+        type: "array"
+        description: "The list of redirect uris"
+        items:
+          type: "string"
+  Company:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+    example:
+      name: "name"
+      email: "email"
+  MyAccount:
+    type: "object"
+    required:
+    - "accountId"
+    - "creationDate"
+    - "email"
+    - "name"
+    - "type"
+    - "updateDate"
+    properties:
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type: 0 .. user, 1 .. company, 2 .. caretaker"
+        minimum: 0
+        maximum: 2
+      email:
+        type: "string"
+        description: "The email address"
+      name:
+        type: "string"
+        description: "The name"
+      masterAccountId:
+        type: "integer"
+        format: "int32"
+        description: "The master account id if it's a sub account"
+      rights:
+        type: "integer"
+        format: "int32"
+        description: "The rights bitmask if it's a sub account: 1 .. manage smartlock,\
+          \ 2 .. operate smartlock, 4 .. manage smartlock config, 8 .. manage smartlock\
+          \ authorizations, 16 .. view smartlock logs, 32 .. manage sub accounts,\
+          \ 64 .. create smartlocks"
+        minimum: 0
+        maximum: 127
+      language:
+        type: "string"
+        example: "de"
+        description: "The language code"
+      config:
+        description: "The optional config"
+        $ref: "#/definitions/Account.Config"
+      profile:
+        description: "The optional profile"
+        $ref: "#/definitions/Account.Profile"
+      secret:
+        type: "array"
+        description: "The secret base64 encoded"
+        items:
+          type: "string"
+          format: "byte"
+          pattern: "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      accountId: 0
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      rights: 75
+      profile:
+        zip: "zip"
+        firstName: "firstName"
+        lastName: "lastName"
+        country: "country"
+        address: "address"
+        city: "city"
+      name: "name"
+      language: "de"
+      secret:
+      - "secret"
+      - "secret"
+      type: 1
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      masterAccountId: 1
+      config:
+        otpEnabledDate: "2000-01-23T04:56:07.000+00:00"
+        alexaPin: "alexaPin"
+        gactionsHomePin: "gactionsHomePin"
+      email: "email"
+  Notification:
+    type: "object"
+    required:
+    - "notificationId"
+    - "os"
+    - "pushId"
+    - "settings"
+    properties:
+      notificationId:
+        type: "string"
+        description: "The unique notificationId for the notification"
+      referenceId:
+        type: "string"
+        description: "The reference ID, an ID to identify a foreign system"
+      pushId:
+        type: "string"
+        description: "The push ID or the POST URL for a webhook"
+      secret:
+        type: "string"
+        example: "8d41a187c3954f886f9de3a88c2ef22df0eac190"
+        description: "The 40 byte hex string to sign the checksumof the POST payload\
+          \ if the notification is webhook (os=2)"
+      os:
+        type: "integer"
+        format: "int32"
+        description: "The operating system: 0 .. Android, 1 .. iOS, 2 .. web hook"
+      language:
+        type: "string"
+        description: "The language of push messages: cs, de, en (default), es, fr,\
+          \ it, nl, sk"
+      status:
+        type: "integer"
+        format: "int32"
+        description: "Current state: 0 .. init, 1 .. active, 2 .. failed"
+      lastActiveDate:
+        type: "string"
+        format: "date-time"
+        description: "The last active date"
+      settings:
+        type: "array"
+        description: "Settings per Smart Lock"
+        items:
+          $ref: "#/definitions/Notification.Setting"
+    example:
+      pushId: "pushId"
+      settings:
+      - smartlockId: 1
+        authIds:
+        - "authIds"
+        - "authIds"
+        triggerEvents:
+        - "triggerEvents"
+        - "triggerEvents"
+      - smartlockId: 1
+        authIds:
+        - "authIds"
+        - "authIds"
+        triggerEvents:
+        - "triggerEvents"
+        - "triggerEvents"
+      os: 0
+      lastActiveDate: "2000-01-23T04:56:07.000+00:00"
+      notificationId: "notificationId"
+      language: "language"
+      secret: "8d41a187c3954f886f9de3a88c2ef22df0eac190"
+      referenceId: "referenceId"
+      status: 6
+  Notification.Setting:
+    type: "object"
+    required:
+    - "triggerEvents"
+    properties:
+      smartlockId:
+        type: "integer"
+        format: "int64"
+        description: "The smartlock ID, if not set all Smart Locks of the account\
+          \  are enabled for push notifications"
+      triggerEvents:
+        type: "array"
+        description: "A set on which push notifications should be triggered: lock,\
+          \ unlock, unlatch, lockngo, open, ring, doorsensor, warnings, smartlock"
+        uniqueItems: true
+        items:
+          type: "string"
+      authIds:
+        type: "array"
+        description: "A set of auth IDs to filter push notifications to certain  users\
+          \ or keypads. If no entry push notifications are triggered for all users\
+          \ and keypads"
+        uniqueItems: true
+        items:
+          type: "string"
+    example:
+      smartlockId: 1
+      authIds:
+      - "authIds"
+      - "authIds"
+      triggerEvents:
+      - "triggerEvents"
+      - "triggerEvents"
+  ObjectId:
+    type: "object"
+    properties:
+      timestamp:
+        type: "integer"
+        format: "int32"
+      machineIdentifier:
+        type: "integer"
+        format: "int32"
+      processIdentifier:
+        type: "integer"
+        format: "int32"
+      counter:
+        type: "integer"
+        format: "int32"
+      time:
+        type: "integer"
+        format: "int64"
+      date:
+        type: "string"
+        format: "date-time"
+      timeSecond:
+        type: "integer"
+        format: "int32"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      machineIdentifier: 6
+      processIdentifier: 1
+      counter: 5
+      time: 5
+      timestamp: 0
+      timeSecond: 2
+  OpenerIntercomBrand:
+    type: "object"
+    required:
+    - "brand"
+    - "brandId"
+    properties:
+      brandId:
+        type: "integer"
+        format: "int32"
+        description: "The brand ID"
+      brand:
+        type: "string"
+        description: "The brand name"
+    example:
+      brandId: 0
+      brand: "brand"
+  OpenerIntercomModel:
+    type: "object"
+    required:
+    - "brandId"
+    - "busModeSwitch"
+    - "busModeSwitchShortCircuitDuration"
+    - "conAudioout"
+    - "conBusAudio"
+    - "conDoorbellMinus"
+    - "conDoorbellPlus"
+    - "conGndAnalogue"
+    - "conGndBus"
+    - "conOpendoor"
+    - "intercomId"
+    - "model"
+    - "type"
+    - "verified"
+    properties:
+      intercomId:
+        type: "integer"
+        format: "int32"
+        description: "The intercom ID"
+      brandId:
+        type: "integer"
+        format: "int32"
+        description: "The related brand ID"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type of the model"
+      model:
+        type: "string"
+        description: "The model name"
+      verified:
+        type: "integer"
+        format: "int32"
+        description: "Verified Nuki intercom: 1 .. verified to work, 2 .. may be compatible,\
+          \ but not verified, 3 .. not compatible"
+      conGndBus:
+        type: "string"
+        description: "Connection for ground BUS"
+      conBusAudio:
+        type: "string"
+        description: "Connection for audio BUS"
+      conAudioout:
+        type: "string"
+        description: "Connection for audio out"
+      conDoorbellPlus:
+        type: "string"
+        description: "Connection for doorbell plus"
+      conDoorbellMinus:
+        type: "string"
+        description: "Connection for doorbell minus"
+      conOpendoor:
+        type: "string"
+        description: "Connection for open the door"
+      conGndAnalogue:
+        type: "string"
+        description: "Connection for ground analogue"
+      busModeSwitch:
+        type: "integer"
+        format: "int32"
+        description: "Settings value for BUS mode switch"
+      busModeSwitchShortCircuitDuration:
+        type: "integer"
+        format: "int32"
+        description: "Settings value for BUS mode switch short cicuit duration"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      conOpendoor: "conOpendoor"
+      conDoorbellPlus: "conDoorbellPlus"
+      conBusAudio: "conBusAudio"
+      verified: 5
+      busModeSwitchShortCircuitDuration: 2
+      type: 1
+      conAudioout: "conAudioout"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      conGndBus: "conGndBus"
+      conDoorbellMinus: "conDoorbellMinus"
+      busModeSwitch: 5
+      intercomId: 0
+      brandId: 6
+      model: "model"
+      conGndAnalogue: "conGndAnalogue"
+  Service:
+    type: "object"
+    required:
+    - "accountId"
+    - "creationDate"
+    - "serviceId"
+    - "state"
+    - "updateDate"
+    properties:
+      serviceId:
+        type: "string"
+        description: "The service id"
+        enum:
+        - "airbnb"
+        - "bookingsync"
+        - "smoobu"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      state:
+        type: "string"
+        description: "The state"
+        enum:
+        - "unlinked"
+        - "syncing"
+        - "linked"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+    example:
+      accountId: 0
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      state: "unlinked"
+      serviceId: "airbnb"
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+  Smartlock:
+    type: "object"
+    required:
+    - "accountId"
+    - "adminPinState"
+    - "authId"
+    - "favorite"
+    - "name"
+    - "serverState"
+    - "smartlockId"
+    - "type"
+    properties:
+      smartlockId:
+        type: "integer"
+        format: "int64"
+        description: "The smartlock id"
+      accountId:
+        type: "integer"
+        format: "int32"
+        description: "The account id"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type: 0 .. keyturner, 1 .. box, 2 .. opener, 3 .. smartdoor"
+      authId:
+        type: "integer"
+        format: "int32"
+        description: "The authorization id"
+      name:
+        type: "string"
+        description: "The name of the smartlock"
+      favorite:
+        type: "boolean"
+        description: "The favorite flag"
+      config:
+        description: "The config"
+        $ref: "#/definitions/Smartlock.Config"
+      advancedConfig:
+        description: "The advanced config"
+        $ref: "#/definitions/Smartlock.AdvancedConfig"
+      openerAdvancedConfig:
+        description: "The opener advanced config"
+        $ref: "#/definitions/Smartlock.OpenerAdvancedConfig"
+      smartdoorAdvancedConfig:
+        description: "The smartdoor advanced config"
+        $ref: "#/definitions/Smartlock.SmartdoorAdvancedConfig"
+      webConfig:
+        description: "The web config"
+        $ref: "#/definitions/Smartlock.WebConfig"
+      state:
+        description: "The state"
+        $ref: "#/definitions/Smartlock.State"
+      firmwareVersion:
+        type: "integer"
+        format: "int32"
+        description: "The firmware version"
+        readOnly: true
+      hardwareVersion:
+        type: "integer"
+        format: "int32"
+        description: "The hardware version"
+        readOnly: true
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+      serverState:
+        type: "integer"
+        format: "int32"
+        description: "The server state: 0 .. ok, 1 .. unregistered, 2 .. auth uuid\
+          \ invalid, 3 .. auth invalid, 4 .. offline"
+        minimum: 0
+        maximum: 4
+      adminPinState:
+        type: "integer"
+        format: "int32"
+        description: "The admin pin state: 0 .. ok, 1 .. missing, 2 .. invalid"
+        minimum: 0
+        maximum: 2
+      virtualDevice:
+        type: "boolean"
+        description: "The flag indicating a virtual Smart Lock"
+        readOnly: true
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+      opener:
+        type: "boolean"
+      box:
+        type: "boolean"
+      smartDoor:
+        type: "boolean"
+      keyturner:
+        type: "boolean"
+    example:
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      openerAdvancedConfig:
+        soundRto: 7
+        electricStrikeDelay: 6
+        soundCm: 6
+        automaticBatteryTypeDetection: true
+        soundRing: 7
+        autoUpdateEnabled: true
+        soundOpen: 0
+        disableRtoAfterRing: true
+        soundLevel: 4
+        busModeSwitch: 2
+        intercomId: 1
+        electricStrikeDuration: 5
+        rtoTimeout: 6
+        doubleButtonPressAction: 7
+        operationId: "operationId"
+        doorbellSuppression: 3
+        doorbellSuppressionDuration: 3
+        randomElectricStrikeDelay: true
+        shortCircuitDuration: 6
+        soundConfirmation: 0
+        singleButtonPressAction: 8
+        batteryType: 3
+      box: true
+      virtualDevice: true
+      type: 1
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      authId: 5
+      smartlockId: 0
+      accountId: 6
+      serverState: 1
+      adminPinState: 1
+      smartDoor: true
+      keyturner: true
+      opener: true
+      advancedConfig:
+        detachedCylinder: true
+        unlatchDuration: 9
+        unlockedToLockedTransitionOffsetDegrees: 8
+        lockedPositionOffsetDegrees: 6
+        automaticBatteryTypeDetection: true
+        autoLock: true
+        autoUpdateEnabled: true
+        unlockedPositionOffsetDegrees: 9
+        doubleButtonPressAction: 5
+        lngTimeout: 1
+        autoLockTimeout: 6
+        operationId: "operationId"
+        singleLockedPositionOffsetDegrees: 6
+        totalDegrees: 9
+        singleButtonPressAction: 4
+        batteryType: 3
+      name: "name"
+      smartdoorAdvancedConfig:
+        unlatchDuration: 3
+        doubleButtonPressAction: 5
+        automaticBatteryTypeDetection: true
+        autoLock: true
+        lngTimeout: 3
+        autoLockTimeout: 4
+        operationId: "operationId"
+        buzzerVolume: 4
+        supportedBatteryTypes:
+        - 0
+        - 0
+        singleButtonPressAction: 7
+        batteryType: 6
+      operationId: "operationId"
+      hardwareVersion: 5
+      webConfig:
+        batteryWarningPerMailEnabled: true
+      state:
+        doorState: 4
+        ringToOpenTimer: 3407
+        keypadBatteryCritical: true
+        trigger: 4
+        ringToOpenEnd: "2000-01-23T04:56:07.000+00:00"
+        batteryCritical: true
+        mode: 0
+        lastAction: 4
+        batteryCharge: 8
+        operationId: "operationId"
+        state: 119
+        batteryCharging: true
+        nightMode: true
+      firmwareVersion: 7
+      favorite: true
+      config:
+        singleLock: true
+        capabilities: 1
+        keypadPaired: true
+        daylightSavingMode: 2
+        operatingMode: 1
+        homekitState: 2
+        latitude: 5.637377
+        fobPaired: true
+        advertisingMode: 0
+        ledEnabled: true
+        pairingEnabled: true
+        timezoneOffset: 3
+        name: "name"
+        fobAction2: 5
+        buttonEnabled: true
+        fobAction1: 3
+        timezoneId: 33
+        operationId: "operationId"
+        ledBrightness: 9
+        longitude: 2.302136
+        autoUnlatch: true
+        fobAction3: 0
+  Smartlock.AdvancedConfig:
+    type: "object"
+    required:
+    - "batteryType"
+    - "lockedPositionOffsetDegrees"
+    - "singleLockedPositionOffsetDegrees"
+    - "totalDegrees"
+    - "unlockedPositionOffsetDegrees"
+    properties:
+      lngTimeout:
+        type: "integer"
+        format: "int32"
+        description: "Timeout in seconds for lock ‘n’ go"
+        enum:
+        - 5
+        - 10
+        - 15
+        - 20
+        - 30
+        - 45
+        - 60
+      singleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed once: 0 .. no action,\
+          \ 1 .. intelligent, 2 .. unlock, 3 .. lock, 4 .. unlatch, 5 .. lock 'n'\
+          \ go, 6 .. show status"
+      doubleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed twice: 0 .. no\
+          \ action, 1 .. intelligent, 2 .. unlock, 3 .. lock, 4 .. unlatch, 5 .. lock\
+          \ 'n' go, 6 .. show status"
+      automaticBatteryTypeDetection:
+        type: "boolean"
+        description: "Flag that indicates if the automatic detection of the battery\
+          \ type is enabled"
+      unlatchDuration:
+        type: "integer"
+        format: "int32"
+        description: "Duration in seconds for holding the latch in unlatched position"
+        enum:
+        - 1
+        - 3
+        - 5
+        - 7
+        - 10
+        - 15
+        - 20
+        - 30
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+      totalDegrees:
+        type: "integer"
+        format: "int32"
+        description: "The absolute total position in degrees that has been reached\
+          \ during calibration"
+        readOnly: true
+      singleLockedPositionOffsetDegrees:
+        type: "integer"
+        format: "int32"
+        description: "Offset that alters the single locked position"
+      unlockedToLockedTransitionOffsetDegrees:
+        type: "integer"
+        format: "int32"
+        description: "Offset that alters the position where transition from unlocked\
+          \ to locked happens"
+      unlockedPositionOffsetDegrees:
+        type: "integer"
+        format: "int32"
+        description: "Offset that alters the unlocked position"
+      lockedPositionOffsetDegrees:
+        type: "integer"
+        format: "int32"
+        description: "Offset that alters the locked position"
+      detachedCylinder:
+        type: "boolean"
+        description: "Flag that indicates that the inner side of the used cylinder\
+          \ is detached from the outer side"
+      batteryType:
+        type: "integer"
+        format: "int32"
+        description: "The type of the batteries present in the smart lock: 0 .. alkali,\
+          \ 1 .. accumulator, 2 .. lithium"
+      autoLock:
+        type: "boolean"
+        description: "New separate flag with FW >= 2.7.8/1.9.1: The Auto Lock feature\
+          \ automatically locks your door when it has been unlocked for a certain\
+          \ period of time"
+      autoLockTimeout:
+        type: "integer"
+        format: "int32"
+        description: "Seconds until the smart lock relocks itself after it has been\
+          \ unlocked. FW < 2.7.8/1.9.1: No auto relock if value is 0, FW >= 2.7.8/1.9.1:\
+          \ has to be >=2 (defaults to 2 for values <2 if autoLock is set to true)"
+      autoUpdateEnabled:
+        type: "boolean"
+        description: "Flag that indicates if available firmware updates for the deviceshould\
+          \ be installed automatically"
+    example:
+      detachedCylinder: true
+      unlatchDuration: 9
+      unlockedToLockedTransitionOffsetDegrees: 8
+      lockedPositionOffsetDegrees: 6
+      automaticBatteryTypeDetection: true
+      autoLock: true
+      autoUpdateEnabled: true
+      unlockedPositionOffsetDegrees: 9
+      doubleButtonPressAction: 5
+      lngTimeout: 1
+      autoLockTimeout: 6
+      operationId: "operationId"
+      singleLockedPositionOffsetDegrees: 6
+      totalDegrees: 9
+      singleButtonPressAction: 4
+      batteryType: 3
+  Smartlock.Config:
+    type: "object"
+    required:
+    - "advertisingMode"
+    - "latitude"
+    - "longitude"
+    - "name"
+    - "singleLock"
+    - "timezoneId"
+    - "timezoneOffset"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the smartlock for new users"
+      latitude:
+        type: "number"
+        format: "float"
+        description: "The latitude of the smartlock position"
+      longitude:
+        type: "number"
+        format: "float"
+        description: "The longitude of the smartlock position"
+      capabilities:
+        type: "integer"
+        format: "int32"
+        description: "The capabilities indicate whether door opening via app is possible,\
+          \ RTO is possible or both: 0 .. only door opening possible, 1 .. both possible,\
+          \ 2 .. only RTO possible (only for type=2)"
+        readOnly: true
+        minimum: 0
+        maximum: 2
+      autoUnlatch:
+        type: "boolean"
+        description: "True if the door should be unlatched on unlocking (knob) (only\
+          \ for type=1 and type=3)"
+      pairingEnabled:
+        type: "boolean"
+        description: "True if the pairing is allowed via the smartlock button"
+      buttonEnabled:
+        type: "boolean"
+        description: "True if the button on the smartlock is enabled"
+      ledEnabled:
+        type: "boolean"
+        description: "True if the LED on the smartlock is enabled"
+      ledBrightness:
+        type: "integer"
+        format: "int32"
+        description: "The brightness of the LED: 0 .. off, 5 .. max (only for type=1\
+          \ and type=3)"
+      timezoneOffset:
+        type: "integer"
+        format: "int32"
+        description: "[deprecated] The timezone offset (in minutes)"
+      daylightSavingMode:
+        type: "integer"
+        format: "int32"
+        description: "[deprecated] The daylight saving mode: 0 .. off, 1 .. european"
+      fobPaired:
+        type: "boolean"
+        description: "True if a fob is paired with the smartlock"
+        readOnly: true
+      fobAction1:
+        type: "integer"
+        format: "int32"
+        description: "The fob action if button is pressed once: type=0: 0 .. none,\
+          \ 1 .. unlock, 2 .. lock, 3 .. lock 'n' go, 4 .. intelligent (lock/unlocked\
+          \ based on the current state); type=2: 0 .. none, 1 .. toggle ring to open,\
+          \ 2 .. activate ring to open, 3 .. deactivate ring to open, 7 .. open (electric\
+          \ strike actuation), 8 .. ring"
+        readOnly: true
+        minimum: 0
+        maximum: 8
+      fobAction2:
+        type: "integer"
+        format: "int32"
+        description: "The fob action if button is pressed twice: type=0: 0 .. none,\
+          \ 1 .. unlock, 2 .. lock, 3 .. lock 'n' go, 4 .. intelligent (lock/unlocked\
+          \ based on the current state); type=2: 0 .. none, 1 .. toggle ring to open,\
+          \ 2 .. activate ring to open, 3 .. deactivate ring to open, 7 .. open (electric\
+          \ strike actuation), 8 .. ring"
+        readOnly: true
+        minimum: 0
+        maximum: 8
+      fobAction3:
+        type: "integer"
+        format: "int32"
+        description: "The fob action if button is pressed 3 times: type=0: 0 .. none,\
+          \ 1 .. unlock, 2 .. lock, 3 .. lock 'n' go, 4 .. intelligent (lock/unlocked\
+          \ based on the current state); type=2: 0 .. none, 1 .. toggle ring to open,\
+          \ 2 .. activate ring to open, 3 .. deactivate ring to open, 7 .. open (electric\
+          \ strike actuation), 8 .. ring"
+        readOnly: true
+        minimum: 0
+        maximum: 8
+      singleLock:
+        type: "boolean"
+        description: "True if the smartlock should only lock once (instead of twice)\
+          \ (only for type=1)"
+      operatingMode:
+        type: "integer"
+        format: "int32"
+        description: "The operating mode of the opener (only for type=2): 0x00 ..\
+          \ generic door opener, 0x01 .. analogue intercom, 0x02 .. digital intercom,\
+          \ 0x03 .. digital intercom Siedle, 0x04 .. digital intercom TCS, 0x05 ..\
+          \ digital intercom Bticino, 0x06 .. analog intercom Siedle HTS, 0x07 ..\
+          \ digital intercom STR, 0x08 .. digital intercom Ritto, 0x09 .. digital\
+          \ intercom Fermax, 0x0A .. digital intercom Comelit, 0x0B .. digital intercom\
+          \ Urmet BiBus, 0x0C .. digital intercom Urmet 2Voice, 0x0D .. digital intercom\
+          \ Golmar, 0x0E .. digital intercom SKS, 0x0F .. digital intercom Spare"
+        readOnly: true
+      advertisingMode:
+        type: "integer"
+        format: "int32"
+        description: "The advertising mode (battery saving): 0 .. automatic, 1 ..\
+          \ normal, 2 .. slow, 3 .. slowest"
+        minimum: 0
+        maximum: 3
+      keypadPaired:
+        type: "boolean"
+        description: "True if a keypad is paired with the smartlock"
+        readOnly: true
+      homekitState:
+        type: "integer"
+        format: "int32"
+        description: "The homekit state: 0 .. unavailable, 1 .. disabled, 2 .. enabled,\
+          \ 3 .. enabled & paired"
+        readOnly: true
+        minimum: 0
+        maximum: 3
+      timezoneId:
+        type: "integer"
+        format: "int32"
+        description: "The timezone id (check https://developer.nuki.io for ids)"
+        minimum: 0
+        maximum: 45
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+    example:
+      singleLock: true
+      capabilities: 1
+      keypadPaired: true
+      daylightSavingMode: 2
+      operatingMode: 1
+      homekitState: 2
+      latitude: 5.637377
+      fobPaired: true
+      advertisingMode: 0
+      ledEnabled: true
+      pairingEnabled: true
+      timezoneOffset: 3
+      name: "name"
+      fobAction2: 5
+      buttonEnabled: true
+      fobAction1: 3
+      timezoneId: 33
+      operationId: "operationId"
+      ledBrightness: 9
+      longitude: 2.302136
+      autoUnlatch: true
+      fobAction3: 0
+  Smartlock.OpenerAdvancedConfig:
+    type: "object"
+    required:
+    - "batteryType"
+    - "busModeSwitch"
+    - "disableRtoAfterRing"
+    - "doorbellSuppression"
+    - "doorbellSuppressionDuration"
+    - "doubleButtonPressAction"
+    - "electricStrikeDelay"
+    - "electricStrikeDuration"
+    - "intercomId"
+    - "randomElectricStrikeDelay"
+    - "rtoTimeout"
+    - "shortCircuitDuration"
+    - "singleButtonPressAction"
+    - "soundCm"
+    - "soundConfirmation"
+    - "soundLevel"
+    - "soundOpen"
+    - "soundRing"
+    - "soundRto"
+    properties:
+      intercomId:
+        type: "integer"
+        format: "int32"
+        description: "The database ID of the connected intercom"
+        readOnly: true
+      busModeSwitch:
+        type: "integer"
+        format: "int32"
+        description: "Method to switch between data and analogue mode"
+        readOnly: true
+        enum:
+        - 0
+        - 1
+      shortCircuitDuration:
+        type: "integer"
+        format: "int32"
+        description: "Duration of the short circuit for BUS mode switching in ms"
+      electricStrikeDelay:
+        type: "integer"
+        format: "int32"
+        description: "Delay of electric strike activation in ms after lock action\
+          \ 3 'electric strike actuation'"
+      randomElectricStrikeDelay:
+        type: "boolean"
+        description: "Random electricStrikeDelay (range 3000 - 7000 ms) in order to\
+          \ simulate a person inside actuating the electric strike"
+      electricStrikeDuration:
+        type: "integer"
+        format: "int32"
+        description: "Duration in ms of electric strike actuation lock action 3 'electric\
+          \ strike actuation'"
+      disableRtoAfterRing:
+        type: "boolean"
+        description: "Flag to disable RTO after ring"
+      rtoTimeout:
+        type: "integer"
+        format: "int32"
+        description: "After this period of time in minutes, RTO gets deactivated automatically"
+      doorbellSuppression:
+        type: "integer"
+        format: "int32"
+        description: "The doorbell supression bitmask: first bit (least significant)\
+          \ .. whenever the doorbell rings and CM and RTO are inactive, second bit\
+          \ .. RTO is active, third bit .. CM is active"
+      doorbellSuppressionDuration:
+        type: "integer"
+        format: "int32"
+        description: "Duration in ms of doorbell suppression (only in Operating mode\
+          \ 2 'digital Intercom')"
+      soundRing:
+        type: "integer"
+        format: "int32"
+        description: "The sound for ring: 0 .. no sound, 1 .. Sound1, 2 .. Sound2,\
+          \ 3 .. Sound3"
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      soundOpen:
+        type: "integer"
+        format: "int32"
+        description: "The sound for open: 0 .. no sound, 1 .. Sound1, 2 .. Sound2,\
+          \ 3 .. Sound3"
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      soundRto:
+        type: "integer"
+        format: "int32"
+        description: "The sound for RTO: 0 .. no sound, 1 .. Sound1, 2 .. Sound2,\
+          \ 3 .. Sound3"
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      soundCm:
+        type: "integer"
+        format: "int32"
+        description: "The sound for CM: 0 .. no sound, 1 .. Sound1, 2 .. Sound2, 3\
+          \ .. Sound3"
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      soundConfirmation:
+        type: "integer"
+        format: "int32"
+        description: "The sound confirmation: 0 .. no sound, 1 .. sound"
+        enum:
+        - 0
+        - 1
+      soundLevel:
+        type: "integer"
+        format: "int32"
+        description: "The sound level"
+      singleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed once: 0 .. no action,\
+          \ 1 .. toggle RTO, 2 .. activate RTO, 3 .. deactivate RTO, 4 .. toggle CM,\
+          \ 5 .. activate CM, 6 .. deactivate CM, 7 .. open"
+      doubleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed twice: 0 .. no\
+          \ action, 1 .. toggle RTO, 2 .. activate RTO, 3 .. deactivate RTO, 4 ..\
+          \ toggle CM, 5 .. activate CM, 6 .. deactivate CM, 7 .. open"
+      batteryType:
+        type: "integer"
+        format: "int32"
+        description: "The type of the batteries present in the smart lock: 0 .. alkali,\
+          \ 1 .. accumulator, 2 .. lithium, 3 .. fixed"
+      automaticBatteryTypeDetection:
+        type: "boolean"
+        description: "Flag that indicates if the automatic detection of the battery\
+          \ type is enabled"
+      autoUpdateEnabled:
+        type: "boolean"
+        description: "Flag that indicates if available firmware updates for the deviceshould\
+          \ be installed automatically"
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+    example:
+      soundRto: 7
+      electricStrikeDelay: 6
+      soundCm: 6
+      automaticBatteryTypeDetection: true
+      soundRing: 7
+      autoUpdateEnabled: true
+      soundOpen: 0
+      disableRtoAfterRing: true
+      soundLevel: 4
+      busModeSwitch: 2
+      intercomId: 1
+      electricStrikeDuration: 5
+      rtoTimeout: 6
+      doubleButtonPressAction: 7
+      operationId: "operationId"
+      doorbellSuppression: 3
+      doorbellSuppressionDuration: 3
+      randomElectricStrikeDelay: true
+      shortCircuitDuration: 6
+      soundConfirmation: 0
+      singleButtonPressAction: 8
+      batteryType: 3
+  Smartlock.SmartdoorAdvancedConfig:
+    type: "object"
+    required:
+    - "autoLock"
+    - "batteryType"
+    properties:
+      lngTimeout:
+        type: "integer"
+        format: "int32"
+        description: "Timeout in seconds for lock ‘n’ go"
+        enum:
+        - 5
+        - 10
+        - 15
+        - 20
+        - 30
+        - 45
+        - 60
+      singleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed once: 0 .. no action,\
+          \ 1 .. intelligent, 2 .. unlock, 3 .. lock, 4 .. unlatch, 5 .. lock 'n'\
+          \ go, 6 .. show status"
+      doubleButtonPressAction:
+        type: "integer"
+        format: "int32"
+        description: "The desired action, if the button is pressed twice: 0 .. no\
+          \ action, 1 .. intelligent, 2 .. unlock, 3 .. lock, 4 .. unlatch, 5 .. lock\
+          \ 'n' go, 6 .. show status"
+      automaticBatteryTypeDetection:
+        type: "boolean"
+        description: "Flag that indicates if the automatic detection of the battery\
+          \ type is enabled"
+      unlatchDuration:
+        type: "integer"
+        format: "int32"
+        description: "Duration in seconds for holding the latch in unlatched position"
+        enum:
+        - 1
+        - 3
+        - 5
+        - 7
+        - 10
+        - 15
+        - 20
+        - 30
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+      buzzerVolume:
+        type: "integer"
+        format: "int32"
+        description: "The volume of the buzzer: 0 .. off, 1 .. low, 2 .. normal"
+        enum:
+        - 0
+        - 1
+        - 2
+      supportedBatteryTypes:
+        type: "array"
+        description: "Set of supported battery types: 0 .. alkali, 1 .. accumulator,\
+          \ 2 .. lithium, 3 .. fixed, 254 .. automatic, 255 .. unknown"
+        readOnly: true
+        uniqueItems: true
+        items:
+          type: "integer"
+          format: "int32"
+      batteryType:
+        type: "integer"
+        format: "int32"
+        description: "The type of the batteries present in the smart lock: 0 .. alkali,\
+          \ 1 .. accumulator, 2 .. lithium, 3 .. fixed, 255 .. unknown"
+      autoLockTimeout:
+        type: "integer"
+        format: "int32"
+        description: "Seconds until the smart lock relocks itself after it has been\
+          \ unlocked. No auto relock if value is 0"
+      autoLock:
+        type: "boolean"
+        description: "The Auto Lock feature automatically locks your door when it\
+          \ has been unlocked for a certain period of time"
+    example:
+      unlatchDuration: 3
+      doubleButtonPressAction: 5
+      automaticBatteryTypeDetection: true
+      autoLock: true
+      lngTimeout: 3
+      autoLockTimeout: 4
+      operationId: "operationId"
+      buzzerVolume: 4
+      supportedBatteryTypes:
+      - 0
+      - 0
+      singleButtonPressAction: 7
+      batteryType: 6
+  Smartlock.State:
+    type: "object"
+    required:
+    - "batteryCritical"
+    - "doorState"
+    - "lastAction"
+    - "mode"
+    - "nightMode"
+    - "ringToOpenTimer"
+    - "state"
+    - "trigger"
+    properties:
+      mode:
+        type: "integer"
+        format: "int32"
+        description: "The smartlock mode: 0 .. uninitialized, 1 .. pairing, 2 .. door\
+          \ (default), 3 .. continuous (type=2 only), 4 .. maintenance"
+        minimum: 0
+        maximum: 4
+      state:
+        type: "integer"
+        format: "int32"
+        description: "The smartlock state: type=0: 0 .. uncalibrated, 1 .. locked,\
+          \ 2 .. unlocking, 3 .. unlocked, 4 .. locking, 5 .. unlatched, 6 .. unlocked\
+          \ (lock 'n' go), 7 .. unlatching, 254 .. motor blocked, 255 .. undefined;\
+          \ type=2: 0 .. untrained, 1 .. online, 3 .. ring to open active, 5 .. open,\
+          \ 7 .. opening, 253 .. boot run, 255 .. undefined"
+        minimum: 0
+        maximum: 255
+      trigger:
+        type: "integer"
+        format: "int32"
+        description: " The state trigger: 0 .. system, 1 .. manual, 2 .. button, 3\
+          \ .. automatic, 4 .. web (type=1 only), 5 .. app (type=1 only), 6 .. continuous\
+          \ mode (type=2 only), 7 .. accessory (type=3 only)"
+        minimum: 0
+        maximum: 6
+      lastAction:
+        type: "integer"
+        format: "int32"
+        description: "The action: type=0: 1 .. unlock, 2 .. lock, 3 .. unlatch, 4\
+          \ .. lock 'n' go, 5 .. lock 'n' go with unlatch; type=1: 1 .. unlock; type=2:\
+          \ 1 .. activate ring to open, 2 .. deactivate ring to open, 3 .. open (electric\
+          \ strike actuation)"
+        minimum: 0
+        maximum: 5
+      batteryCritical:
+        type: "boolean"
+        description: "True if the battery state of the device is critical"
+      batteryCharging:
+        type: "boolean"
+        description: "True if a Nuki battery pack in a Smart Lock is currently charging"
+      batteryCharge:
+        type: "integer"
+        format: "int32"
+        description: "Remaining capacity of a Nuki battery pack in %"
+        minimum: 0
+        maximum: 100
+      keypadBatteryCritical:
+        type: "boolean"
+        description: "True if the battery of a paired Keypad is critical (only available\
+          \ for supported devices)"
+      doorState:
+        type: "integer"
+        format: "int32"
+        description: "The door state: 0 .. unavailable, 1 .. deactivated, 2 .. door\
+          \ closed, 3 .. door opened, 4 .. door state unknown, 5 .. calibrating"
+        minimum: 0
+        maximum: 5
+      ringToOpenTimer:
+        type: "integer"
+        format: "int32"
+        description: "[deprecated] Remaining ring to open time; 0 if ring to open\
+          \ is not active (type=2 only)"
+        minimum: 0
+        maximum: 65535
+      ringToOpenEnd:
+        type: "string"
+        format: "date-time"
+        description: "End date of ring to open timeout; null if ring to open is not\
+          \ active (type=2 only)"
+      nightMode:
+        type: "boolean"
+        description: "True if night mode currently active"
+      operationId:
+        type: "string"
+        description: "The operation id - if set it's locked for another operation"
+        readOnly: true
+    example:
+      doorState: 4
+      ringToOpenTimer: 3407
+      keypadBatteryCritical: true
+      trigger: 4
+      ringToOpenEnd: "2000-01-23T04:56:07.000+00:00"
+      batteryCritical: true
+      mode: 0
+      lastAction: 4
+      batteryCharge: 8
+      operationId: "operationId"
+      state: 119
+      batteryCharging: true
+      nightMode: true
+  Smartlock.WebConfig:
+    type: "object"
+    properties:
+      batteryWarningPerMailEnabled:
+        type: "boolean"
+        description: "True if a battery warning is send via email"
+    example:
+      batteryWarningPerMailEnabled: true
+  SmartlockAction:
+    type: "object"
+    required:
+    - "action"
+    properties:
+      action:
+        type: "integer"
+        format: "int32"
+        description: "The action: type=0: 1 .. unlock, 2 .. lock, 3 .. unlatch, 4\
+          \ .. lock 'n' go, 5 .. lock 'n' go with unlatch; type=1: 1 .. unlock; type=2:\
+          \ 1 activate ring to open, 2 .. deactivate ring to open, 3 .. open (electric\
+          \ strike actuation), 6 ... activate continuous mode, 7 ... deactivate continuous\
+          \ mode"
+        minimum: 0
+        maximum: 7
+      option:
+        type: "integer"
+        format: "int32"
+        description: "The option mask: 0 .. none, 2 .. force, 4 .. full lock"
+        minimum: 0
+        maximum: 7
+  SmartlockAdminPinUpdate:
+    type: "object"
+    required:
+    - "adminPin"
+    properties:
+      adminPin:
+        type: "integer"
+        format: "int32"
+        description: "The admin pin"
+        minimum: 0
+        maximum: 9999
+  SmartlockAuth:
+    type: "object"
+    required:
+    - "enabled"
+    - "id"
+    - "lockCount"
+    - "name"
+    - "remoteAllowed"
+    - "smartlockId"
+    - "type"
+    properties:
+      id:
+        type: "string"
+        description: "The unique id for the smartlock authorization"
+      smartlockId:
+        type: "integer"
+        format: "int64"
+        description: "The smartlock id"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user"
+      authId:
+        type: "integer"
+        format: "int32"
+        description: "The smartlock authorization id"
+      code:
+        type: "integer"
+        format: "int32"
+        description: "The keypad code (only for type keypad)"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type of the authorization: 0 .. app, 1 .. bridge, 2 .. fob,\
+          \ 3 .. keypad, 13 .. keypad code, 14 .. z-key, 15 .. virtual"
+        readOnly: true
+        minimum: 0
+        maximum: 2
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      enabled:
+        type: "boolean"
+        description: "True if the auth is enabled"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      lockCount:
+        type: "integer"
+        format: "int32"
+        description: "The lock count"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      lastActiveDate:
+        type: "string"
+        format: "date-time"
+        description: "The last active date"
+      creationDate:
+        type: "string"
+        format: "date-time"
+        description: "The creation date"
+      updateDate:
+        type: "string"
+        format: "date-time"
+        description: "The update date"
+      operationId:
+        description: "The operation id - if set the auth is locked for another operations."
+        readOnly: true
+        $ref: "#/definitions/ObjectId"
+    example:
+      lockCount: 2
+      updateDate: "2000-01-23T04:56:07.000+00:00"
+      code: 5
+      remoteAllowed: true
+      allowedUntilDate: "2000-01-23T04:56:07.000+00:00"
+      allowedFromDate: "2000-01-23T04:56:07.000+00:00"
+      lastActiveDate: "2000-01-23T04:56:07.000+00:00"
+      allowedUntilTime: 3
+      type: 1
+      allowedWeekDays: 89
+      creationDate: "2000-01-23T04:56:07.000+00:00"
+      authId: 1
+      enabled: true
+      allowedFromTime: 9
+      smartlockId: 0
+      name: "name"
+      operationId:
+        date: "2000-01-23T04:56:07.000+00:00"
+        machineIdentifier: 6
+        processIdentifier: 1
+        counter: 5
+        time: 5
+        timestamp: 0
+        timeSecond: 2
+      id: "id"
+      accountUserId: 6
+  SmartlockAuthCreate:
+    type: "object"
+    required:
+    - "name"
+    - "remoteAllowed"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user (required if type is NOT 13\
+          \ .. keypad)"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      smartActionsEnabled:
+        type: "boolean"
+        description: "The smart actions enabled flag"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The optional type of the auth 0 .. app (default), 2 .. fob,\
+          \ 13 .. keypad"
+      code:
+        type: "integer"
+        format: "int32"
+        description: "The code of the keypad authorization (only for keypad)"
+  SmartlockAuthMultiUpdate:
+    type: "object"
+    required:
+    - "id"
+    - "name"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user"
+      enabled:
+        type: "boolean"
+        description: "True if the auth is enabled"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      code:
+        type: "integer"
+        format: "int32"
+        description: "The code of the keypad authorization (only for keypad)"
+      id:
+        type: "string"
+        description: "The unique id for the smartlock authorization"
+  SmartlockAuthUpdate:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user"
+      enabled:
+        type: "boolean"
+        description: "True if the auth is enabled"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      code:
+        type: "integer"
+        format: "int32"
+        description: "The code of the keypad authorization (only for keypad)"
+  SmartlockCreate:
+    type: "object"
+    required:
+    - "authId"
+    - "authSecret"
+    - "name"
+    - "type"
+    properties:
+      smartlockId:
+        type: "integer"
+        format: "int32"
+        description: "The smartlock id in 32 bits (only for a smartlock, opener or\
+          \ smartdoor)"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The type: 0 .. smartlock, 1 .. box, 2 .. opener, 3 .. smartdoor"
+      name:
+        type: "string"
+        description: "The name"
+      authUuid:
+        type: "string"
+        description: "The authorization uuid (only for a smartlock, opener or smartdoor)"
+      authId:
+        type: "integer"
+        format: "int32"
+        description: "The authorization id (boxId if box)"
+      authSecret:
+        type: "string"
+        description: "The authorization secret"
+  SmartlockLog:
+    type: "object"
+    required:
+    - "action"
+    - "autoUnlock"
+    - "date"
+    - "deviceType"
+    - "id"
+    - "name"
+    - "smartlockId"
+    - "state"
+    - "trigger"
+    properties:
+      id:
+        type: "string"
+        description: "The unique id for the smartlock log"
+      smartlockId:
+        type: "integer"
+        format: "int64"
+        description: "The smartlock id"
+      deviceType:
+        type: "integer"
+        format: "int32"
+        description: "The device type: 0 .. smartlock and box, 2 .. opener, 3 .. smartdoor"
+        enum:
+        - 0
+        - 2
+        - 3
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user"
+      authId:
+        type: "string"
+        description: "The id of the linked smartlock auth"
+      name:
+        type: "string"
+        description: "The name"
+      action:
+        type: "integer"
+        format: "int32"
+        description: "The action: 1 .. unlock, 2 .. lock, 3 .. unlatch, 4 .. lock'n'go,\
+          \ 5 .. lock'n'go with unlatch, 208 .. door warning ajar, 209 door warning\
+          \ status mismatch, 224 .. doorbell recognition (only Opener), 240 .. door\
+          \ opened, 241 .. door closed, 242 .. door sensor jammed, 243 .. firmware\
+          \ update, 250 .. door log enabled, 251 .. door log disabled, 252 .. initialization,\
+          \ 253 .. calibration, 254 .. log enabled, 255 .. log disabled"
+        minimum: 1
+        maximum: 255
+      trigger:
+        type: "integer"
+        format: "int32"
+        description: "The trigger: 0 .. system, 1 .. manual, 2 .. button, 3 .. automatic,\
+          \ 4 .. web, 5 .. app, 6 .. auto lock, 7 .. accessory, 255 .. keypad"
+        minimum: 0
+        maximum: 255
+      state:
+        type: "integer"
+        format: "int32"
+        description: "The completion state: 0 .. Success, 1 .. Motor blocked, 2 ..\
+          \ Canceled, 3 .. Too recent, 4 .. Busy, 5 .. Low motor voltage, 6 .. Clutch\
+          \ failure, 7 .. Motor power failure, 8 .. Incomplete, 9 .. Rejected, 10\
+          \ .. Rejected night mode, 254 .. Other error, 255 .. Unknown error"
+        minimum: 1
+        maximum: 255
+      autoUnlock:
+        type: "boolean"
+        description: "True if it was an auto unlock"
+      date:
+        type: "string"
+        format: "date-time"
+        description: "The log date"
+      openerLog:
+        description: "The opener specific log"
+        $ref: "#/definitions/SmartlockLog.OpenerLog"
+      ajarTimeout:
+        type: "integer"
+        format: "int32"
+        description: "The door sensor warning ajar timeout (in minutes, only for action\
+          \ = 208)"
+    example:
+      deviceType: 6
+      date: "2000-01-23T04:56:07.000+00:00"
+      trigger: 143
+      ajarTimeout: 9
+      authId: "authId"
+      autoUnlock: true
+      smartlockId: 0
+      openerLog:
+        flagGeoFence: true
+        activeRto: true
+        activeCm: true
+        source: 4
+        flagDoorbellSuppression: true
+        flagForce: true
+      name: "name"
+      action: 152
+      id: "id"
+      state: 59
+      accountUserId: 1
+  SmartlockLog.OpenerLog:
+    type: "object"
+    required:
+    - "activeCm"
+    - "activeRto"
+    - "flagDoorbellSuppression"
+    - "flagForce"
+    - "flagGeoFence"
+    - "source"
+    properties:
+      activeCm:
+        type: "boolean"
+        description: "Flag indicating if continuous mode was active"
+      activeRto:
+        type: "boolean"
+        description: "Flag indicating if ring to open was active"
+      source:
+        type: "integer"
+        format: "int32"
+        description: "The cause of the activation of ring to open or continuous mode:\
+          \ 0 .. doorbell, 1 .. timecontrol, 2 .. app, 3 .. button, 4 .. fob, 5 ..\
+          \ bridge, 6 .. keypad"
+        minimum: 0
+        maximum: 6
+      flagGeoFence:
+        type: "boolean"
+        description: "Flag indicating a geo fence induced action"
+      flagForce:
+        type: "boolean"
+        description: "Flag indicating a force induced action"
+      flagDoorbellSuppression:
+        type: "boolean"
+        description: "Flag indicating if doorbell suppression was active"
+    example:
+      flagGeoFence: true
+      activeRto: true
+      activeCm: true
+      source: 4
+      flagDoorbellSuppression: true
+      flagForce: true
+  SmartlockUpdate:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "The new name of the smartlock"
+      favorite:
+        type: "boolean"
+        description: "True if the smartlock is favorite"
+  SmartlocksAuthAdvancedCreate:
+    type: "object"
+    required:
+    - "accountUserId"
+    - "name"
+    - "remoteAllowed"
+    - "smartlockIds"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user"
+      smartlockIds:
+        type: "array"
+        description: "The list of smartlock ids"
+        items:
+          type: "integer"
+          format: "int64"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      smartActionsEnabled:
+        type: "boolean"
+        description: "The smart actions enabled flag"
+  SmartlocksAuthCreate:
+    type: "object"
+    required:
+    - "name"
+    - "remoteAllowed"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the authorization (max 32 chars)"
+      allowedFromDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed from date"
+      allowedUntilDate:
+        type: "string"
+        format: "date-time"
+        description: "The allowed until date"
+      allowedWeekDays:
+        type: "integer"
+        format: "int32"
+        description: "The allowed weekdays bitmask: 64 .. monday, 32 .. tuesday, 16\
+          \ .. wednesday, 8 .. thursday, 4 .. friday, 2 .. saturday, 1 .. sunday"
+        minimum: 0
+        maximum: 127
+      allowedFromTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed from time (in minutes from midnight)"
+      allowedUntilTime:
+        type: "integer"
+        format: "int32"
+        description: "The allowed until time (in minutes from midnight)"
+      accountUserId:
+        type: "integer"
+        format: "int32"
+        description: "The id of the linked account user (required if type is NOT 13\
+          \ .. keypad)"
+      smartlockIds:
+        type: "array"
+        description: "The list of smartlock ids"
+        items:
+          type: "integer"
+          format: "int64"
+      remoteAllowed:
+        type: "boolean"
+        description: "True if the auth has remote access"
+      smartActionsEnabled:
+        type: "boolean"
+        description: "The smart actions enabled flag"
+      type:
+        type: "integer"
+        format: "int32"
+        description: "The optional type of the auth 0 .. app (default), 2 .. fob,\
+          \ 13 .. keypad"
+      code:
+        type: "integer"
+        format: "int32"
+        description: "The code of the keypad authorization (only for keypad)"
+  Subscription:
+    type: "object"
+    required:
+    - "available"
+    - "descriptions"
+    - "length"
+    - "price"
+    - "quantity"
+    - "subscriptionId"
+    - "titles"
+    properties:
+      subscriptionId:
+        type: "integer"
+        format: "int32"
+        description: "The unique subscription id"
+      titles:
+        type: "object"
+        example: "{ de: '', en: ''}"
+        description: "The title per language"
+        additionalProperties:
+          type: "string"
+      descriptions:
+        type: "object"
+        example: "{ de: '', en: ''}"
+        description: "The description per language"
+        additionalProperties:
+          type: "string"
+      quantity:
+        type: "integer"
+        format: "int32"
+        description: "The quantity of authorizations"
+      length:
+        type: "string"
+        example: "30d"
+        description: "The length with number and unit (e.g. 30d, 2y)"
+      price:
+        type: "number"
+        format: "double"
+        description: "The price"
+      giftArticle:
+        type: "string"
+        description: "The optional gift article"
+      available:
+        type: "boolean"
+        description: "True if the subscription is available for new users"
+      updateDate:
+        type: "integer"
+        format: "int64"
+        description: "The update date"
+    example:
+      updateDate: 5
+      quantity: 6
+      price: 1.46581298050294517310021547018550336360931396484375
+      giftArticle: "giftArticle"
+      length: "30d"
+      available: true
+      titles: "{ de: '', en: ''}"
+      subscriptionId: 0
+      descriptions: "{ de: '', en: ''}"
