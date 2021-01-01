@@ -210,7 +210,8 @@ func regelwerk() error {
 				log.Fatal(token.Error())
 			}
 			log.Printf("subscribed to %q", topic)
-		})
+		}).
+		SetConnectRetry(true)
 
 	go func() {
 		if err := http.ListenAndServe(":37731", mux); err != nil {
