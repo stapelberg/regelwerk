@@ -176,6 +176,7 @@ func regelwerk() error {
 	var loops []controlLoop
 	if host == "midna" {
 		loops = append(loops, &doorNotifyLoop{})
+		loops = append(loops, &nukiNotifyLoop{})
 		loops = append(loops, &ringDecode{})
 	} else {
 		loops = append(loops, &avrPowerLoop{})
