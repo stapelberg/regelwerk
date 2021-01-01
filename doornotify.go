@@ -43,6 +43,7 @@ func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	notifySend := exec.Command(
 		"notify-send",
 		"--icon="+icon,
+		"--expire-time=2000",
 		title,
 		body)
 	notifySend.Stderr = os.Stderr
@@ -51,7 +52,7 @@ func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil
 	}
 
-	l.statusf("notification for %q shown at %v", name, time.Now())
+	l.statusf("%v] notification for %q shown", time.Now().Format(time.RFC3339Nano), name)
 
 	return nil
 }
