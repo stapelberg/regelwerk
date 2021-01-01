@@ -38,6 +38,7 @@ func (l *ringDecode) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	notifySend := exec.Command(
 		"notify-send",
 		"--icon="+icon,
+		"--expire-time=2000",
 		title,
 		body)
 	notifySend.Stderr = os.Stderr
@@ -46,7 +47,7 @@ func (l *ringDecode) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil
 	}
 
-	l.statusf("door bell ring shown at %v", time.Now())
+	l.statusf("%v] door bell ring shown", time.Now().Format(time.RFC3339Nano))
 
 	return nil
 }
