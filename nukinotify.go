@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -72,11 +71,14 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 
 	// https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4#heading--lockstate
 
+	// TODO: deduplicate based on ringactionTimestamp
 	var body string
 	if cb.RingactionState {
 		body = "<i>geklingelt!</i>"
 	} else {
 		switch cb.LockStateName {
+		case "open":
+			// somebody opened
 		case "online":
 			body = "Normalbetrieb"
 		case "rto active":
@@ -89,35 +91,25 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		"dunstify",
 		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
 		"--action=open,Open",
-		"--timeout=0",
-		"Nuki Opener", // title
+		"--timeout=60000", // ms, i.e. 1 minute
+		"Nuki Opener",     // title
 		body)
-	var stdout bytes.Buffer
-	dunstify.Stdout = &stdout
 	dunstify.Stderr = os.Stderr
-	if err := dunstify.Start(); err != nil {
+	b, err := dunstify.Output()
+	if err != nil {
 		l.statusf("%v", err)
 		return nil
 	}
-	go func() {
-		// read result and act accordingly
-		err := dunstify.Wait()
-		if err != nil {
-			log.Print(err)
-			return
-		}
-		result := strings.TrimSpace(stdout.String())
-		log.Printf("result=%q", result)
-		switch result {
-		case "1":
-			// timeout
-		case "2":
-			// dismissed
-		case "open":
-			log.Printf("open triggered, sending nuki")
-
-		}
-	}()
+	result := strings.TrimSpace(string(b))
+	log.Printf("result=%q", result)
+	switch result {
+	case "1":
+		// timeout
+	case "2":
+		// dismissed
+	case "open":
+		log.Printf("open triggered, sending nuki (dry run)")
+	}
 
 	l.statusf("%v] nuki notification for %+v shown", time.Now().Format(time.RFC3339Nano), cb)
 
