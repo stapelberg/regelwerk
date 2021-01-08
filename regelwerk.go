@@ -27,15 +27,22 @@ type MQTTPublish struct {
 }
 
 type controlLoop interface {
+	sync.Locker
+
 	StatusString() string
 
 	ProcessEvent(MQTTEvent) []MQTTPublish
 }
 
 type statusLoop struct {
+	mu sync.Mutex
+
 	statusMu sync.Mutex
 	status   string
 }
+
+func (l *statusLoop) Lock()   { l.mu.Lock() }
+func (l *statusLoop) Unlock() { l.mu.Unlock() }
 
 func (l *statusLoop) StatusString() string {
 	l.statusMu.Lock()
@@ -47,6 +54,7 @@ func (l *statusLoop) statusf(format string, v ...interface{}) {
 	l.statusMu.Lock()
 	defer l.statusMu.Unlock()
 	l.status = fmt.Sprintf(format, v...)
+	log.Printf("status: %s", l.status)
 }
 
 type invocationLog struct {
@@ -63,7 +71,21 @@ type debugHandler struct {
 	lastInvocationsCur int
 }
 
-var debugHandlerTmpl = template.Must(template.New("").Parse(`
+var debugHandlerTmpl = template.Must(template.New("").Parse(`<!DOCTYPE html>
+<head>
+<style>
+pre { white-space: pre-wrap; }
+</style>
+</head>
+<h1>loops</h1>
+<ul>
+{{ $numloops := len .Loops }}
+{{ range $idx, $loop := .Loops }}
+  <li>loop {{ $idx }} of {{ $numloops }}: {{ printf "%T" $loop }}<br>
+<strong>status:</strong> <pre>{{ $loop.StatusString }}</pre></li>
+{{ end }}
+</ul>
+
 <h1>lastInvocations</h1>
 <table>
 <tr>
@@ -89,14 +111,7 @@ var debugHandlerTmpl = template.Must(template.New("").Parse(`
 {{ end }}
 
 </table>
-<h1>loops</h1>
-<ul>
-{{ $numloops := len .Loops }}
-{{ range $idx, $loop := .Loops }}
-  <li>loop {{ $idx }} of {{ $numloops }}: {{ printf "%T" $loop }}<br>
-<strong>status:</strong> {{ $loop.StatusString }}</li>
-{{ end }}
-</ul>
+
 `))
 
 func (d *debugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -114,10 +129,12 @@ func (d *debugHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type mqttMessageHandler struct {
-	dryRun       bool
-	client       mqtt.Client
-	loops        []controlLoop
-	debugHandler *debugHandler
+	dryRun bool
+	client mqtt.Client
+	loops  []controlLoop
+
+	debugHandlerMu sync.Mutex
+	debugHandler   *debugHandler
 }
 
 func (h *mqttMessageHandler) handle(_ mqtt.Client, m mqtt.Message) {
@@ -129,34 +146,40 @@ func (h *mqttMessageHandler) handle(_ mqtt.Client, m mqtt.Message) {
 	}
 
 	for _, l := range h.loops {
-		// TODO: for reliability, call each loop in its own
-		// goroutine (yes, one per message, but probably with a
-		// timeout somehow?), so that one loop can be stuck
-		// while others still make progress
-		results := l.ProcessEvent(ev)
-		if len(results) == 0 {
-			continue
-		}
-		for _, r := range results {
-			log.Printf("publishing: %+v", r)
-			if !h.dryRun {
-				h.client.Publish(r.Topic, r.Qos, r.Retained, r.Payload)
+		l := l // copy
+		go func() {
+			// For reliability, we call each loop in its own goroutine (yes, one
+			// per message), so that one loop can be stuck while others still
+			// make progress.
+			l.Lock()
+			results := l.ProcessEvent(ev)
+			l.Unlock()
+			if len(results) == 0 {
+				return
 			}
-		}
+			for _, r := range results {
+				log.Printf("publishing: %+v", r)
+				if !h.dryRun {
+					h.client.Publish(r.Topic, r.Qos, r.Retained, r.Payload)
+				}
+			}
 
-		// For introspection, log this message loop invocation’s inputs and
-		// outputs:
-		dh := h.debugHandler
-		dh.lastInvocations[dh.lastInvocationsCur] = invocationLog{
-			Time:    time.Now(),
-			Loop:    l,
-			Event:   ev,
-			Results: results,
-		}
-		dh.lastInvocationsCur++
-		if dh.lastInvocationsCur == len(dh.lastInvocations) {
-			dh.lastInvocationsCur = 0
-		}
+			// For introspection, log this message loop invocation’s inputs and
+			// outputs:
+			h.debugHandlerMu.Lock()
+			defer h.debugHandlerMu.Unlock()
+			dh := h.debugHandler
+			dh.lastInvocations[dh.lastInvocationsCur] = invocationLog{
+				Time:    time.Now(),
+				Loop:    l,
+				Event:   ev,
+				Results: results,
+			}
+			dh.lastInvocationsCur++
+			if dh.lastInvocationsCur == len(dh.lastInvocations) {
+				dh.lastInvocationsCur = 0
+			}
+		}()
 	}
 }
 
