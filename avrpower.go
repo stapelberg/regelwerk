@@ -11,6 +11,8 @@ type avrPowerLoop struct {
 	midnaUnlocked          bool
 	michaelPhoneExpiration time.Time
 	leaPhoneExpiration     time.Time
+
+	previous string
 }
 
 func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -64,6 +66,10 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	if anyoneHome {
 		payload = "ON"
 	}
+	if l.previous == payload {
+		return nil // skip, no change
+	}
+	l.previous = payload
 	return []MQTTPublish{
 		{
 			Topic:    "cmnd/tasmota_68462F/Power",
