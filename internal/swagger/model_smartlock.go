@@ -55,8 +55,8 @@ type Smartlock struct {
 	CreationDate time.Time `json:"creationDate,omitempty"`
 	// The update date
 	UpdateDate time.Time `json:"updateDate,omitempty"`
-	Opener bool `json:"opener,omitempty"`
-	Box bool `json:"box,omitempty"`
-	SmartDoor bool `json:"smartDoor,omitempty"`
-	Keyturner bool `json:"keyturner,omitempty"`
+	Opener     bool      `json:"opener,omitempty"`
+	Box        bool      `json:"box,omitempty"`
+	SmartDoor  bool      `json:"smartDoor,omitempty"`
+	Keyturner  bool      `json:"keyturner,omitempty"`
 }

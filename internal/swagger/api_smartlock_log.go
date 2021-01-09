@@ -1,4 +1,3 @@
-
 /*
  * Nuki API
  *
@@ -13,12 +12,12 @@ package swagger
 
 import (
 	"context"
+	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"fmt"
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -28,7 +27,7 @@ var (
 
 type SmartlockLogApiService service
 
-/* 
+/*
 SmartlockLogApiService Get a list of smartlock logs for all of your smartlocks
 
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -43,21 +42,21 @@ SmartlockLogApiService Get a list of smartlock logs for all of your smartlocks
 @return []SmartlockLog
 */
 
-type SmartlockLogApiGetOpts struct { 
+type SmartlockLogApiGetOpts struct {
 	AccountUserId optional.Int32
-	FromDate optional.String
-	ToDate optional.String
-	Action optional.Int32
-	Id optional.Int32
-	Limit optional.Int32
+	FromDate      optional.String
+	ToDate        optional.String
+	Action        optional.Int32
+	Id            optional.Int32
+	Limit         optional.Int32
 }
 
 func (a *SmartlockLogApiService) Get(ctx context.Context, localVarOptionals *SmartlockLogApiGetOpts) ([]SmartlockLog, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []SmartlockLog
 	)
 
@@ -121,36 +120,36 @@ func (a *SmartlockLogApiService) Get(ctx context.Context, localVarOptionals *Sma
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []SmartlockLog
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 
 	return localVarReturnValue, localVarHttpResponse, nil
 }
 
-/* 
+/*
 SmartlockLogApiService Get a list of smartlock logs
 
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
@@ -167,22 +166,22 @@ SmartlockLogApiService Get a list of smartlock logs
 @return []SmartlockLog
 */
 
-type SmartlockLogApiGet_1Opts struct { 
-	AuthId optional.String
+type SmartlockLogApiGet_1Opts struct {
+	AuthId        optional.String
 	AccountUserId optional.Int32
-	FromDate optional.String
-	ToDate optional.String
-	Action optional.Int32
-	Id optional.String
-	Limit optional.Int32
+	FromDate      optional.String
+	ToDate        optional.String
+	Action        optional.Int32
+	Id            optional.String
+	Limit         optional.Int32
 }
 
 func (a *SmartlockLogApiService) Get_1(ctx context.Context, smartlockId int32, localVarOptionals *SmartlockLogApiGet_1Opts) ([]SmartlockLog, *http.Response, error) {
 	var (
-		localVarHttpMethod = strings.ToUpper("Get")
-		localVarPostBody   interface{}
-		localVarFileName   string
-		localVarFileBytes  []byte
+		localVarHttpMethod  = strings.ToUpper("Get")
+		localVarPostBody    interface{}
+		localVarFileName    string
+		localVarFileBytes   []byte
 		localVarReturnValue []SmartlockLog
 	)
 
@@ -250,29 +249,29 @@ func (a *SmartlockLogApiService) Get_1(ctx context.Context, smartlockId int32, l
 
 	if localVarHttpResponse.StatusCode < 300 {
 		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
+		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+		if err == nil {
 			return localVarReturnValue, localVarHttpResponse, err
 		}
 	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
-			body: localVarBody,
+			body:  localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		
+
 		if localVarHttpResponse.StatusCode == 200 {
 			var v []SmartlockLog
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
+			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
 				return localVarReturnValue, localVarHttpResponse, newErr
+			}
+			newErr.model = v
+			return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		
+
 		return localVarReturnValue, localVarHttpResponse, newErr
 	}
 

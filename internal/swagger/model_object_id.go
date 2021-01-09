@@ -15,11 +15,11 @@ import (
 )
 
 type ObjectId struct {
-	Timestamp int32 `json:"timestamp,omitempty"`
-	MachineIdentifier int32 `json:"machineIdentifier,omitempty"`
-	ProcessIdentifier int32 `json:"processIdentifier,omitempty"`
-	Counter int32 `json:"counter,omitempty"`
-	Time int64 `json:"time,omitempty"`
-	Date time.Time `json:"date,omitempty"`
-	TimeSecond int32 `json:"timeSecond,omitempty"`
+	Timestamp         int32     `json:"timestamp,omitempty"`
+	MachineIdentifier int32     `json:"machineIdentifier,omitempty"`
+	ProcessIdentifier int32     `json:"processIdentifier,omitempty"`
+	Counter           int32     `json:"counter,omitempty"`
+	Time              int64     `json:"time,omitempty"`
+	Date              time.Time `json:"date,omitempty"`
+	TimeSecond        int32     `json:"timeSecond,omitempty"`
 }
