@@ -20,6 +20,9 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		Expiration time.Time `json:"expiration"`
 	}
 	switch ev.Topic {
+	case "regelwerk/ticker/1s":
+	// current time influences our state
+
 	case "runstatus/midna/i3lock":
 		var runStatus struct {
 			Running bool `json:"running"`

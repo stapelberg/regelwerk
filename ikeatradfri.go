@@ -9,6 +9,11 @@ type tradfriSink struct {
 }
 
 func (l *tradfriSink) ProcessEvent(ev MQTTEvent) []MQTTPublish {
+	switch ev.Topic {
+	case "regelwerk/ticker/1s":
+		return nil
+	}
+
 	log.Printf("tradfri light control loop(%+v)", ev)
 	l.statusf("last event: %v", ev.Timestamp)
 

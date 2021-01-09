@@ -148,7 +148,10 @@ func (h *mqttMessageHandler) handle(_ mqtt.Client, m mqtt.Message) {
 		Topic:     m.Topic(),
 		Payload:   m.Payload(),
 	}
+	h.handleEvent(ev)
+}
 
+func (h *mqttMessageHandler) handleEvent(ev MQTTEvent) {
 	for _, l := range h.loops {
 		l := l // copy
 		go func() {
@@ -192,6 +195,9 @@ func regelwerk() error {
 		false,
 		"dry run (do not publish)")
 	flag.Parse()
+
+	// Enable file names in logs:
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	mux := http.NewServeMux()
 
@@ -254,6 +260,14 @@ func regelwerk() error {
 		return fmt.Errorf("MQTT connection failed: %v", token.Error())
 	}
 	log.Printf("MQTT subscription established")
+	for tick := range time.Tick(1 * time.Second) {
+		ev := MQTTEvent{
+			Timestamp: tick,
+			Topic:     "regelwerk/ticker/1s",
+			Payload:   nil,
+		}
+		mqttMessageHandler.handleEvent(ev)
+	}
 	select {} // loop forever
 }
 
