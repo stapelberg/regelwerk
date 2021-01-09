@@ -7,11 +7,11 @@ import (
 	"time"
 )
 
-type ringDecode struct {
+type ringNotify struct {
 	statusLoop
 }
 
-func (l *ringDecode) ProcessEvent(ev MQTTEvent) []MQTTPublish {
+func (l *ringNotify) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	if ev.Topic != "doorbell/events/scs" {
 		return nil // event did not influence our state
 	}
@@ -32,6 +32,7 @@ func (l *ringDecode) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil // not a ring, or for somebody else
 	}
 
+	// TODO: copy action from nukinotify and return an MQTT publish message to trigger the opener
 	body := "<i>jetzt geklingelt</li>"
 	icon := "/home/michael/zkj-workspace-switcher/bell-solid.png"
 	title := "Türklingel!"

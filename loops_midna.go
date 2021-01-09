@@ -5,5 +5,5 @@ package main
 var loops = []controlLoop{
 	&doorNotifyLoop{},
 	&nukiNotifyLoop{},
-	&ringDecode{},
+	&ringNotify{},
 }
