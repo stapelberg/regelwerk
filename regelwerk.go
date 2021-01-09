@@ -206,18 +206,6 @@ func regelwerk() error {
 		return err
 	}
 
-	var loops []controlLoop
-	if host == "midna" {
-		loops = append(loops, &doorNotifyLoop{})
-		loops = append(loops, &nukiNotifyLoop{})
-		loops = append(loops, &ringDecode{})
-	} else {
-		loops = append(loops, &avrPowerLoop{})
-		loops = append(loops, &tradfriSink{})
-		loops = append(loops, &hallwayLight{})
-		loops = append(loops, &nukiRTOLoop{})
-	}
-
 	dh := &debugHandler{
 		loops: loops,
 	}
