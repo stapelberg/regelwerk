@@ -37,8 +37,9 @@ type controlLoop interface {
 type statusLoop struct {
 	mu sync.Mutex
 
-	statusMu sync.Mutex
-	status   string
+	statusMu   sync.Mutex
+	status     string
+	statusPrev string
 }
 
 func (l *statusLoop) Lock()   { l.mu.Lock() }
@@ -54,7 +55,10 @@ func (l *statusLoop) statusf(format string, v ...interface{}) {
 	l.statusMu.Lock()
 	defer l.statusMu.Unlock()
 	l.status = fmt.Sprintf(format, v...)
-	log.Printf("status: %s", l.status)
+	if l.status != l.statusPrev {
+		log.Printf("status: %s", l.status)
+		l.statusPrev = l.status
+	}
 }
 
 type invocationLog struct {
