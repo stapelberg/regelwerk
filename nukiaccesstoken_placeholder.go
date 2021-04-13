@@ -1,4 +1,5 @@
 // +build linux,!rw_midna
+// +build linux,!gokrazy
 
 package main
 
