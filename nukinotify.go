@@ -101,6 +101,7 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil
 	}
 	result := strings.TrimSpace(string(b))
+	l.statusf("%v] nuki notification for %+v shown", time.Now().Format(time.RFC3339Nano), cb)
 	log.Printf("result=%q", result)
 	switch result {
 	case "1":
@@ -108,10 +109,14 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	case "2":
 		// dismissed
 	case "open":
-		log.Printf("open triggered, sending nuki (dry run)")
+		log.Printf("open triggered, unlocking door")
+		return []MQTTPublish{
+			{
+				Topic:   "doorbell/cmd/unlock",
+				Payload: "unlock",
+			},
+		}
 	}
-
-	l.statusf("%v] nuki notification for %+v shown", time.Now().Format(time.RFC3339Nano), cb)
 
 	return nil
 }
