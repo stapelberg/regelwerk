@@ -72,9 +72,13 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	// https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4#heading--lockstate
 
 	// TODO: deduplicate based on ringactionTimestamp
+	args := []string{
+		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
+	}
 	var body string
 	if cb.RingactionState {
 		body = "<i>geklingelt!</i>"
+		args = append(args, "--action=open,Open")
 	} else {
 		switch cb.LockStateName {
 		case "open":
@@ -89,11 +93,10 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	}
 	dunstify := exec.Command(
 		"dunstify",
-		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
-		"--action=open,Open",
-		"--timeout=60000", // ms, i.e. 1 minute
-		"Nuki Opener",     // title
-		body)
+		append(args,
+			"--timeout=60000", // ms, i.e. 1 minute
+			"Nuki Opener",     // title
+			body)...)
 	dunstify.Stderr = os.Stderr
 	b, err := dunstify.Output()
 	if err != nil {
