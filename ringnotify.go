@@ -17,6 +17,12 @@ func (l *ringNotify) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil // event did not influence our state
 	}
 
+	go func() {
+		if err := playSound(); err != nil {
+			log.Print(err)
+		}
+	}()
+
 	body := "<i>jetzt geklingelt (" + string(ev.Payload.([]byte)) + ")</li>"
 	icon := "/home/michael/zkj-workspace-switcher/bell-solid.png"
 	title := "Türklingel!"

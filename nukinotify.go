@@ -91,6 +91,11 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			body = "<i>" + cb.LockStateName + "</i>"
 		}
 	}
+	go func() {
+		if err := playSound(); err != nil {
+			log.Print(err)
+		}
+	}()
 	dunstify := exec.Command(
 		"dunstify",
 		append(args,

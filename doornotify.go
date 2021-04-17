@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"time"
@@ -32,6 +33,13 @@ func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		l.statusf("%v", err)
 		return nil
 	}
+
+	go func() {
+		if err := playSound(); err != nil {
+			log.Print(err)
+		}
+	}()
+
 	titlefmt := "%s-Tür"
 	body := "<i>jetzt geöffnet</li>"
 	icon := "/home/michael/zkj-workspace-switcher/door-open-solid.png"

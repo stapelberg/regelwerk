@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"sync"
 	"time"
 
@@ -188,6 +189,25 @@ func (h *mqttMessageHandler) handleEvent(ev MQTTEvent) {
 			}
 		}()
 	}
+}
+
+var lastSound time.Time
+
+func playSound() error {
+	if time.Since(lastSound) < 5*time.Second {
+		return nil
+	}
+	// play notification sound to the bluetooth headphones, if connected
+	play := exec.Command("pacat",
+		"--device=bluez_sink.94_DB_56_5F_C8_1B.a2dp_sink",
+		"--file-format=wav",
+		"/home/michael/Downloads/super_mario_bros_sounds/smb_pause.wav")
+	play.Stderr = os.Stderr
+	if err := play.Run(); err != nil {
+		return fmt.Errorf("%v: %v", play.Args, err)
+	}
+	lastSound = time.Now()
+	return nil
 }
 
 func regelwerk() error {
