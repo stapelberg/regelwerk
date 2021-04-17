@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/http/pprof"
 	"os"
 	"os/exec"
 	"sync"
@@ -230,6 +231,7 @@ func regelwerk() error {
 		loops: loops,
 	}
 	mux.Handle("/", dh)
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
 
 	mqttMessageHandler := &mqttMessageHandler{
 		dryRun:       *dryRun,
