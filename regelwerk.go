@@ -13,7 +13,29 @@ import (
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
+
+// prometheus metrics
+var (
+	// From
+	// https://www.robustperception.io/are-increasing-timestamps-counters-or-gauges:
+	//
+	//   So timestamps should always be gauges, and generally reported using
+	//   Unix timestamps in seconds.
+	lastMessageMetric = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: "mqtt",
+			Name:      "last_message",
+			Help:      "UNIX timestamp of the last message on the specified MQTT topic",
+		},
+		[]string{"topic"})
+)
+
+func init() {
+	prometheus.MustRegister(lastMessageMetric)
+}
 
 type MQTTEvent struct {
 	Timestamp time.Time
@@ -151,6 +173,9 @@ func (h *mqttMessageHandler) handle(_ mqtt.Client, m mqtt.Message) {
 		Payload:   m.Payload(),
 	}
 	h.handleEvent(ev)
+
+	ts := ev.Timestamp.Unix()
+	lastMessageMetric.With(prometheus.Labels{"topic": ev.Topic}).Set(float64(ts))
 }
 
 func (h *mqttMessageHandler) handleEvent(ev MQTTEvent) {
@@ -231,6 +256,7 @@ func regelwerk() error {
 		loops: loops,
 	}
 	mux.Handle("/", dh)
+	mux.Handle("/metrics", promhttp.Handler())
 	mux.HandleFunc("/debug/pprof/", pprof.Index)
 
 	mqttMessageHandler := &mqttMessageHandler{
