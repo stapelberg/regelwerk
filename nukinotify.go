@@ -37,6 +37,8 @@ func unlockNuki() error {
 
 type nukiNotifyLoop struct {
 	statusLoop
+
+	lastRingactionTimestamp time.Time
 }
 
 func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -71,14 +73,14 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 
 	// https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4#heading--lockstate
 
-	// TODO: deduplicate based on ringactionTimestamp
 	args := []string{
 		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
 	}
 	var body string
-	if cb.RingactionState {
+	if l.lastRingactionTimestamp != cb.RingactionTimestamp {
 		body = "<i>geklingelt!</i>"
 		args = append(args, "--action=open,Open")
+		l.lastRingactionTimestamp = cb.RingactionTimestamp
 	} else {
 		switch cb.LockStateName {
 		case "open":
