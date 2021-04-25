@@ -13,6 +13,40 @@ import (
 	"time"
 )
 
+type nukiCallback struct {
+	DeviceType          int       `json:"deviceType"` // 1 = Nuki Smart Lock, 2 = Nuki Opener
+	Mode                int       `json:"mode"`       // 2 = door mode (setup complete)
+	LockState           int       `json:"state"`
+	LockStateName       string    `json:"stateName"`
+	BatteryCritical     bool      `json:"batteryCritical"`
+	RingactionTimestamp time.Time `json:"ringactionTimestamp"`
+	RingactionState     bool      `json:"ringactionState"`
+}
+
+type nukiInterpreter struct {
+	lastRingactionTimestamp time.Time
+}
+
+func (i *nukiInterpreter) processCallback(cb *nukiCallback) (ring bool, body string) {
+	if !i.lastRingactionTimestamp.Equal(cb.RingactionTimestamp) {
+		body = "<i>geklingelt!</i>"
+		i.lastRingactionTimestamp = cb.RingactionTimestamp
+		return true, body
+	} else {
+		switch cb.LockStateName {
+		case "open":
+			body = "<i>Tür geöffnet</i>"
+		case "online":
+			body = "Normalbetrieb"
+		case "rto active":
+			body = "<i>Ring To Open (RTO)</i>"
+		default:
+			body = "<i>" + cb.LockStateName + "</i>"
+		}
+	}
+	return false, body
+}
+
 func unlockNuki() error {
 	log.Printf("unlocking nuki opener")
 
@@ -38,7 +72,7 @@ func unlockNuki() error {
 type nukiNotifyLoop struct {
 	statusLoop
 
-	lastRingactionTimestamp time.Time
+	interpreter nukiInterpreter
 }
 
 func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -49,17 +83,7 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil // event did not influence our state
 	}
 
-	type callback struct {
-		DeviceType          int       `json:"deviceType"` // 1 = Nuki Smart Lock, 2 = Nuki Opener
-		Mode                int       `json:"mode"`       // 2 = door mode (setup complete)
-		LockState           int       `json:"state"`
-		LockStateName       string    `json:"stateName"`
-		BatteryCritical     bool      `json:"batteryCritical"`
-		RingactionTimestamp time.Time `json:"ringactionTimestamp"`
-		RingactionState     bool      `json:"ringactionState"`
-	}
-
-	var cb callback
+	var cb nukiCallback
 	if err := json.Unmarshal(ev.Payload.([]byte), &cb); err != nil {
 		l.statusf("%v", err)
 		return nil
@@ -76,22 +100,9 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	args := []string{
 		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
 	}
-	var body string
-	if l.lastRingactionTimestamp != cb.RingactionTimestamp {
-		body = "<i>geklingelt!</i>"
+	ring, body := l.interpreter.processCallback(&cb)
+	if ring {
 		args = append(args, "--action=open,Open")
-		l.lastRingactionTimestamp = cb.RingactionTimestamp
-	} else {
-		switch cb.LockStateName {
-		case "open":
-			// somebody opened
-		case "online":
-			body = "Normalbetrieb"
-		case "rto active":
-			body = "<i>Ring To Open (RTO)</i>"
-		default:
-			body = "<i>" + cb.LockStateName + "</i>"
-		}
 	}
 	go func() {
 		if err := playSound(); err != nil {
