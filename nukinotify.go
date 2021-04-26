@@ -28,7 +28,7 @@ type nukiInterpreter struct {
 }
 
 func (i *nukiInterpreter) processCallback(cb *nukiCallback) (ring bool, body string) {
-	if !i.lastRingactionTimestamp.Equal(cb.RingactionTimestamp) {
+	if cb.RingactionState && !i.lastRingactionTimestamp.Equal(cb.RingactionTimestamp) {
 		body = "<i>geklingelt!</i>"
 		i.lastRingactionTimestamp = cb.RingactionTimestamp
 		return true, body
