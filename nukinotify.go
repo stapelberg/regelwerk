@@ -8,9 +8,10 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"regelwerk/internal/swagger"
 	"strings"
 	"time"
+
+	"github.com/stapelberg/regelwerk/internal/swagger"
 )
 
 type nukiCallback struct {

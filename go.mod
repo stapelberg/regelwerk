@@ -1,4 +1,4 @@
-module regelwerk
+module github.com/stapelberg/regelwerk
 
 go 1.17
 

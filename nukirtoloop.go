@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"regelwerk/internal/swagger"
 	"time"
+
+	"github.com/stapelberg/regelwerk/internal/swagger"
 )
 
 func turnOffRTO() error {
