@@ -5,7 +5,7 @@ package main
 
 var loops = []controlLoop{
 	&avrPowerLoop{},
-	&tradfriSink{},
-	&hallwayLight{},
+	&hallwayLightDoor{},
+	newHallwayLightLate(),
 	&nukiRTOLoop{},
 }

@@ -8,6 +8,7 @@ require (
 	github.com/google/go-cmp v0.5.4
 	github.com/prometheus/client_golang v1.10.0
 	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
+	golang.org/x/time v0.0.0-20191024005414-555d28b269f0
 )
 
 require (
@@ -21,5 +22,6 @@ require (
 	github.com/prometheus/procfs v0.6.0 // indirect
 	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
 	golang.org/x/sys v0.0.0-20210309074719-68d13333faf2 // indirect
+	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/protobuf v1.25.0 // indirect
 )
