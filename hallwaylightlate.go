@@ -36,7 +36,7 @@ func (l *hallwayLightLate) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	// separate piece of code
 	now := ev.Timestamp
 	hour := now.Hour()
-	on := hour > 17
+	on := hour >= 17
 	l.statusf("%v == (hour=%v > 17)", on, hour)
 	if !on {
 		return nil
