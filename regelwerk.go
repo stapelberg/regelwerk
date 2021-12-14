@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"html/template"
@@ -223,10 +224,24 @@ func playSound() error {
 	if time.Since(lastSound) < 5*time.Second {
 		return nil
 	}
-	// play notification sound to the bluetooth headphones, if connected
-	play := exec.Command("pacat",
-		"--device=bluez_sink.94_DB_56_5F_C8_1B.a2dp_sink",
-		"--file-format=wav",
+	// list targets
+	targets := exec.Command("pw-cat",
+		"--list-targets",
+		"--playback",
+		"/home/michael/Downloads/super_mario_bros_sounds/smb_pause.wav")
+	targets.Stderr = os.Stderr
+	b, err := targets.Output()
+	if err != nil {
+		return fmt.Errorf("%v: %v", targets.Args, err)
+	}
+	if !bytes.Contains(b, []byte("WH-1000XM4")) {
+		return nil // headphones not connected
+	}
+
+	// Play notification sound. We don’t need --target (and parsing is annoying)
+	// since the headphones are the default when connected.
+	play := exec.Command("pw-cat",
+		"--playback",
 		"/home/michael/Downloads/super_mario_bros_sounds/smb_pause.wav")
 	play.Stderr = os.Stderr
 	if err := play.Run(); err != nil {
