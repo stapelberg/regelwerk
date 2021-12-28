@@ -54,12 +54,8 @@ func (l *hallwayLightLate) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	l.lastHallOn = now
 	return []MQTTPublish{
 		{
-			Topic:   "shellies/shellycolorbulb-98CDAC1E5C3E/color/0/command",
-			Payload: "on",
-		},
-		{
-			Topic:   "shellies/shellycolorbulb-98CDAC1FB736/color/0/command",
-			Payload: "on",
+			Topic:   "github.com/stapelberg/hue2mqtt/cmd/light/hall/on",
+			Payload: "{}",
 		},
 	}
 }
