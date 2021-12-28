@@ -56,17 +56,10 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	_, _, _ = weekday, hour, minute // TODO
 	phoneHome := l.michaelPhoneExpiration.After(now) ||
 		l.leaPhoneExpiration.After(now)
-	l.statusf("midnaUnlocked=%v || (hour=%v > 8 && phoneHome=%v)",
-		l.midnaUnlocked,
-		hour,
-		phoneHome)
-	anyoneHome :=
-		l.midnaUnlocked ||
-			(hour > 8 && phoneHome)
-		// // TODO: l.beastPowered ||
-
+	_ = phoneHome
+	l.statusf("midnaUnlocked=%v", l.midnaUnlocked)
 	payload := "OFF"
-	if anyoneHome {
+	if l.midnaUnlocked {
 		payload = "ON"
 	}
 	if l.previous == payload {
