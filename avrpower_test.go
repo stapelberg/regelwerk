@@ -61,6 +61,7 @@ func TestAvrPowerLoop(t *testing.T) {
 	})
 
 	t.Run("PhoneHome", func(t *testing.T) {
+		t.Skipf("behavior currently disabled")
 		l := &avrPowerLoop{}
 		timestamp := time.Date(
 			2021, time.January, 2,
@@ -95,6 +96,7 @@ func TestAvrPowerLoop(t *testing.T) {
 	})
 
 	t.Run("PhoneHome", func(t *testing.T) {
+		t.Skipf("behavior currently disabled")
 		l := &avrPowerLoop{}
 
 		// too early:
