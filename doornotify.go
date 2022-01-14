@@ -19,11 +19,8 @@ func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	case "zigbee/onoff/158D00045CB94E":
 		name = "Wohnzimmer"
 
-	case "zigbee/onoff/158D0003674007":
-		name = "Apartment"
-
 	case "github.com/stapelberg/shelly2mqtt/door/hall":
-		name = "Apartment-neu"
+		name = "Apartment"
 
 	case "github.com/stapelberg/shelly2mqtt/door/living":
 		name = "Wohnzimmer-neu"

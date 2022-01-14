@@ -39,7 +39,7 @@ type nukiRTOLoop struct {
 
 func (l *nukiRTOLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch ev.Topic {
-	case "zigbee/onoff/158D0003674007":
+	case "github.com/stapelberg/shelly2mqtt/door/hall":
 		// apartment door
 
 	default:

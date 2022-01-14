@@ -22,7 +22,7 @@ func (l *hallwayLightDoor) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		}
 		return nil
 
-	case "zigbee/onoff/158D0003674007":
+	case "github.com/stapelberg/shelly2mqtt/door/hall":
 		// TODO: parse JSON
 		if fmt.Sprintf("%s", ev.Payload) != `{"onoff":true}` {
 			return nil // apartment door closed
