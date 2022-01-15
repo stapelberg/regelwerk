@@ -16,14 +16,11 @@ type doorNotifyLoop struct {
 func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	var name string
 	switch ev.Topic {
-	case "zigbee/onoff/158D00045CB94E":
-		name = "Wohnzimmer"
-
 	case "github.com/stapelberg/shelly2mqtt/door/hall":
 		name = "Apartment"
 
 	case "github.com/stapelberg/shelly2mqtt/door/living":
-		name = "Wohnzimmer-neu"
+		name = "Wohnzimmer"
 
 	default:
 		return nil // event did not influence our state
