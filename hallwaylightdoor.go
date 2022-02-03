@@ -48,6 +48,4 @@ func (l *hallwayLightDoor) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	default:
 		return nil
 	}
-
-	return nil
 }
