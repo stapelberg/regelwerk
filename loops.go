@@ -9,4 +9,5 @@ var loops = []controlLoop{
 	newHallwayLightLate(),
 	&nukiRTOLoop{},
 	&shellyEnergyMeterLoop{},
+	&motionLoop{},
 }
