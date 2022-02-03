@@ -8,4 +8,5 @@ var loops = []controlLoop{
 	&hallwayLightDoor{},
 	newHallwayLightLate(),
 	&nukiRTOLoop{},
+	&shellyEnergyMeterLoop{},
 }
