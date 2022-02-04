@@ -44,6 +44,28 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			},
 		}
 
+	case "github.com/stapelberg/shelly2mqtt/motion/kitchen":
+		var event struct {
+			Command string `json:"command"`
+		}
+		if err := json.Unmarshal(ev.Payload.([]byte), &event); err != nil {
+			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+
+		l.statusf("forwarding command %q", event.Command)
+
+		return []MQTTPublish{
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/kitchen/" + event.Command,
+				Payload: "{}",
+			},
+			{
+				Topic:   "github.com/stapelberg/hue2mqtt/cmd/light/kitchen/" + event.Command,
+				Payload: "{}",
+			},
+		}
+
 	default:
 		return nil
 	}
