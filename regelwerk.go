@@ -81,7 +81,7 @@ func (l *statusLoop) statusf(format string, v ...interface{}) {
 	defer l.statusMu.Unlock()
 	l.status = fmt.Sprintf(format, v...)
 	if l.status != l.statusPrev {
-		log.Printf("status: %s", l.status)
+		log.Output(2, fmt.Sprintf("status: %s", l.status))
 		l.statusPrev = l.status
 	}
 }
