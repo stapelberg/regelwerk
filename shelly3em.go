@@ -111,6 +111,5 @@ func (l *shellyEnergyMeterLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil // ignore unknown property
 	}
 
-	l.statusf("last %q", last)
 	return nil
 }
