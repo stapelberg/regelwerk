@@ -24,7 +24,7 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			return nil
 		}
 		// long press turns off motion control for 10 minutes
-		l.ignoreUntil = time.Now().Add(10 * time.Minute)
+		l.ignoreUntil = ev.Timestamp.Add(10 * time.Minute)
 		l.statusf("not turning on light from motion until %v", l.ignoreUntil)
 		return nil
 
@@ -53,7 +53,7 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			l.statusf("json.Unmarshal: %v", err)
 			return nil
 		}
-		if !l.ignoreUntil.IsZero() && time.Now().Before(l.ignoreUntil) {
+		if !l.ignoreUntil.IsZero() && ev.Timestamp.Before(l.ignoreUntil) {
 			l.statusf("ignoring motion until %v", l.ignoreUntil)
 			return nil
 		}
