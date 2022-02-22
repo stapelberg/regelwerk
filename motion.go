@@ -8,12 +8,8 @@ import (
 type motionLoop struct {
 	statusLoop
 
-	ignoreUntil time.Time
-
-	// // The Shelly 1L reports pushes and state, but not in the same
-	// // message. Hence, the resetTimeOnOff flag is set on push, and becomes
-	// // effective on next state change.
-	// resetTimeOnOff bool
+	bathroomRelayLast string
+	ignoreUntil       time.Time
 }
 
 func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -28,22 +24,19 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		l.statusf("not turning on light from motion until %v", l.ignoreUntil)
 		return nil
 
-	// case "shellies/shelly1l-84CCA8AE3855/relay/0":
-	// 	if !l.resetTimeOnOff {
-	// 		return nil
-	// 	}
-	// 	if string(ev.Payload.([]byte)) != "off" {
-	// 		return nil
-	// 	}
-	// 	l.statusf("light turned off, resetting motion sensor stop time")
-	// 	l.resetTimeOnOff = false
-	// 	return []MQTTPublish{
-	// 		{
-	// 			Topic:   "github.com/stapelberg/shelly2mqtt/cmd/reset/bathroom",
-	// 			Payload: "{}",
-	// 		},
-	// 	}
-	// 	return nil
+		// bathroom
+	case "shellies/shelly1l-84CCA8AE3855/relay/0":
+		state := string(ev.Payload.([]byte))
+		if state == l.bathroomRelayLast {
+			return nil
+		}
+		l.bathroomRelayLast = state
+		if state != "off" {
+			return nil
+		}
+		l.statusf("light turned off, ignoring motion sensor for 1 minute")
+		l.ignoreUntil = ev.Timestamp.Add(1 * time.Minute)
+		return nil
 
 	case "github.com/stapelberg/shelly2mqtt/motion/bathroom":
 		var event struct {
@@ -58,7 +51,7 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			return nil
 		}
 
-		cmd := event.Command + "&timer=600" // retain state for 10 minutes, then turn off
+		cmd := "on&timer=600" // retain state for 10 minutes, then turn off
 		l.statusf("forwarding command %q", cmd)
 
 		return []MQTTPublish{
