@@ -8,20 +8,21 @@ import (
 type motionLoop struct {
 	statusLoop
 
-	bathroomRelayLast string
-	ignoreUntil       time.Time
+	bathroomRelayLast   string
+	bathroomIgnoreUntil time.Time
+
+	kitchenIgnoreUntil time.Time
 }
 
 func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch ev.Topic {
 	case "shellies/shelly1l-84CCA8AE3855/longpush/0":
-		// l.resetTimeOnOff = true
 		if string(ev.Payload.([]byte)) != "1" {
 			return nil
 		}
 		// long press turns off motion control for 10 minutes
-		l.ignoreUntil = ev.Timestamp.Add(10 * time.Minute)
-		l.statusf("not turning on light from motion until %v", l.ignoreUntil)
+		l.bathroomIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
+		l.statusf("[bathroom] not turning on light from motion until %v", l.bathroomIgnoreUntil)
 		return nil
 
 		// bathroom
@@ -34,8 +35,8 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		if state != "off" {
 			return nil
 		}
-		l.statusf("light turned off, ignoring motion sensor for 1 minute")
-		l.ignoreUntil = ev.Timestamp.Add(1 * time.Minute)
+		l.statusf("[bathroom] light turned off, ignoring motion sensor for 2 minutes")
+		l.bathroomIgnoreUntil = ev.Timestamp.Add(2 * time.Minute)
 		return nil
 
 	case "github.com/stapelberg/shelly2mqtt/motion/bathroom":
@@ -46,8 +47,8 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			l.statusf("json.Unmarshal: %v", err)
 			return nil
 		}
-		if !l.ignoreUntil.IsZero() && ev.Timestamp.Before(l.ignoreUntil) {
-			l.statusf("ignoring motion until %v", l.ignoreUntil)
+		if !l.bathroomIgnoreUntil.IsZero() && ev.Timestamp.Before(l.bathroomIgnoreUntil) {
+			l.statusf("[bathroom] ignoring motion until %v", l.bathroomIgnoreUntil)
 			return nil
 		}
 
@@ -61,12 +62,26 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			},
 		}
 
+	case "shellies/shelly1l-E8DB84AB335F/longpush/0":
+		if string(ev.Payload.([]byte)) != "1" {
+			return nil
+		}
+		// long press turns off motion control for 10 minutes
+		l.kitchenIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
+		l.statusf("[kitchen] not turning on light from motion until %v", l.kitchenIgnoreUntil)
+		return nil
+
 	case "github.com/stapelberg/shelly2mqtt/motion/kitchen":
 		var event struct {
 			Command string `json:"command"`
 		}
 		if err := json.Unmarshal(ev.Payload.([]byte), &event); err != nil {
 			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+
+		if !l.kitchenIgnoreUntil.IsZero() && ev.Timestamp.Before(l.kitchenIgnoreUntil) {
+			l.statusf("[kitchen] ignoring motion until %v", l.kitchenIgnoreUntil)
 			return nil
 		}
 
