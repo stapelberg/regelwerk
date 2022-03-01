@@ -16,6 +16,22 @@ type motionLoop struct {
 
 func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch ev.Topic {
+	case "github.com/stapelberg/hue2mqtt/sensors/33",
+		"github.com/stapelberg/hue2mqtt/sensors/20":
+		l.statusf("all lights turned off, ignoring motion sensor for 10 minutes")
+		l.bathroomIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
+		l.kitchenIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
+		return []MQTTPublish{
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/kitchen/off",
+				Payload: "{}",
+			},
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/bathroom/off",
+				Payload: "{}",
+			},
+		}
+
 	case "shellies/shelly1l-84CCA8AE3855/longpush/0":
 		if string(ev.Payload.([]byte)) != "1" {
 			return nil
