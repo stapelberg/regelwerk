@@ -18,6 +18,19 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch ev.Topic {
 	case "github.com/stapelberg/hue2mqtt/sensors/33",
 		"github.com/stapelberg/hue2mqtt/sensors/20":
+		var event struct {
+			ID string `json:"id"`
+		}
+		if err := json.Unmarshal(ev.Payload.([]byte), &event); err != nil {
+			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+
+		if event.ID != "0f417018-1e82-4f9f-adb0-fcc4a27be688" &&
+			event.ID != "d245c4e3-7a58-4314-b248-54aae303565c" {
+			l.statusf("skipping (looking for all off button only)")
+			return nil
+		}
 		l.statusf("all lights turned off, ignoring motion sensor for 10 minutes")
 		l.bathroomIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
 		l.kitchenIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
