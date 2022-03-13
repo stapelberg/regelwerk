@@ -10,6 +10,7 @@ type motionLoop struct {
 
 	bathroomRelayLast   string
 	bathroomIgnoreUntil time.Time
+	bathroomIgnoreOff   bool
 
 	kitchenIgnoreUntil time.Time
 }
@@ -64,8 +65,8 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		if state != "off" {
 			return nil
 		}
-		l.statusf("[bathroom] light turned off, ignoring motion sensor for 2 minutes")
-		l.bathroomIgnoreUntil = ev.Timestamp.Add(2 * time.Minute)
+		l.statusf("[bathroom] light turned off, ignoring next motion-off")
+		l.bathroomIgnoreOff = true
 		return nil
 
 	case "github.com/stapelberg/shelly2mqtt/motion/bathroom":
@@ -81,7 +82,18 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			return nil
 		}
 
-		cmd := "on&timer=600" // retain state for 10 minutes, then turn off
+		cmd := event.Command
+		if cmd == "off" {
+			if l.bathroomIgnoreOff {
+				l.bathroomIgnoreOff = false
+				l.statusf("[bathroom] ignoring off because light was switched off")
+				return nil
+			}
+			cmd = "on&timer=600" // retain state for 10 minutes, then turn off
+		} else {
+			// New "on" event, reset ignore-off flag.
+			l.bathroomIgnoreOff = false
+		}
 		l.statusf("forwarding command %q", cmd)
 
 		return []MQTTPublish{
