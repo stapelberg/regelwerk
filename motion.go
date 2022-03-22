@@ -77,6 +77,12 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			l.statusf("json.Unmarshal: %v", err)
 			return nil
 		}
+
+		if hour := ev.Timestamp.Hour(); hour < 6 {
+			l.statusf("[bathroom] ignoring motion event between 23:59 and 06:00 (currently: hour=%d)", hour)
+			return nil
+		}
+
 		if !l.bathroomIgnoreUntil.IsZero() && ev.Timestamp.Before(l.bathroomIgnoreUntil) {
 			l.statusf("[bathroom] ignoring motion until %v", l.bathroomIgnoreUntil)
 			return nil
@@ -118,6 +124,11 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		}
 		if err := json.Unmarshal(ev.Payload.([]byte), &event); err != nil {
 			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+
+		if hour := ev.Timestamp.Hour(); hour < 6 {
+			l.statusf("[kitchen] ignoring motion event between 23:59 and 06:00 (currently: hour=%d)", hour)
 			return nil
 		}
 
