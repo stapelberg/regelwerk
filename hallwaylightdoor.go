@@ -29,7 +29,7 @@ func (l *hallwayLightDoor) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		}
 		// apartment door opened
 
-		if hour := ev.Timestamp.Hour(); hour > 9 && hour < 17 {
+		if hour := ev.Timestamp.Hour(); hour > 7 && hour < 17 {
 			l.statusf("leaving lights off during daytime")
 			return nil // leave lights off during daytime
 		}
