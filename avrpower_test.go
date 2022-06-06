@@ -8,6 +8,19 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+func setDefaultSink(t *testing.T, l *avrPowerLoop, defaultSink ...string) []MQTTPublish {
+	t.Helper()
+	sink := "alsa_output.pci-0000_00_1f.3.analog-stereo"
+	if len(defaultSink) > 0 {
+		sink = defaultSink[0]
+	}
+	return l.ProcessEvent(MQTTEvent{
+		Topic:     "github.com/stapelberg/defaultsink2mqtt/default_sink",
+		Timestamp: time.Now(),
+		Payload:   []byte(sink),
+	})
+}
+
 func TestAvrPowerLoop(t *testing.T) {
 
 	t.Run("Unrelated", func(t *testing.T) {
@@ -24,6 +37,7 @@ func TestAvrPowerLoop(t *testing.T) {
 
 	t.Run("UnlockScreen", func(t *testing.T) {
 		l := &avrPowerLoop{}
+		setDefaultSink(t, l)
 		got := l.ProcessEvent(MQTTEvent{
 			Topic:     "runstatus/midna/i3lock",
 			Timestamp: time.Now(),
@@ -41,13 +55,53 @@ func TestAvrPowerLoop(t *testing.T) {
 		}
 	})
 
-	t.Run("LockScreen", func(t *testing.T) {
+	t.Run("UnlockBluetooth", func(t *testing.T) {
 		l := &avrPowerLoop{}
+		setDefaultSink(t, l)
 		got := l.ProcessEvent(MQTTEvent{
 			Topic:     "runstatus/midna/i3lock",
 			Timestamp: time.Now(),
-			Payload:   []byte(`{"running":true}`),
+			Payload:   []byte(`{"running":false}`),
 		})
+		want := []MQTTPublish{
+			{
+				Topic:    "cmnd/tasmota_68462F/Power",
+				Payload:  "ON",
+				Retained: true,
+			},
+		}
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
+		}
+
+		got = setDefaultSink(t, l, "bluez_sink.94_DB_56_5F_C8_1B.a2dp_sink")
+		want = []MQTTPublish{
+			{
+				Topic:    "cmnd/tasmota_68462F/Power",
+				Payload:  "OFF",
+				Retained: true,
+			},
+		}
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
+		}
+
+		got = setDefaultSink(t, l)
+		want = []MQTTPublish{
+			{
+				Topic:    "cmnd/tasmota_68462F/Power",
+				Payload:  "ON",
+				Retained: true,
+			},
+		}
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
+		}
+	})
+
+	t.Run("LockScreen", func(t *testing.T) {
+		l := &avrPowerLoop{}
+		got := setDefaultSink(t, l)
 		want := []MQTTPublish{
 			{
 				Topic:    "cmnd/tasmota_68462F/Power",
@@ -58,11 +112,22 @@ func TestAvrPowerLoop(t *testing.T) {
 		if diff := cmp.Diff(want, got); diff != "" {
 			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
 		}
+
+		got = l.ProcessEvent(MQTTEvent{
+			Topic:     "runstatus/midna/i3lock",
+			Timestamp: time.Now(),
+			Payload:   []byte(`{"running":true}`),
+		})
+		want = nil
+		if diff := cmp.Diff(want, got); diff != "" {
+			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
+		}
 	})
 
 	t.Run("PhoneHome", func(t *testing.T) {
 		t.Skipf("behavior currently disabled")
 		l := &avrPowerLoop{}
+		setDefaultSink(t, l)
 		timestamp := time.Date(
 			2021, time.January, 2,
 			// 09:23:21 UTC is after 08:00:00 in both, summer time (CEST) and
@@ -98,6 +163,7 @@ func TestAvrPowerLoop(t *testing.T) {
 	t.Run("PhoneHome", func(t *testing.T) {
 		t.Skipf("behavior currently disabled")
 		l := &avrPowerLoop{}
+		setDefaultSink(t, l)
 
 		// too early:
 		timestamp := time.Date(

@@ -9,6 +9,7 @@ type avrPowerLoop struct {
 	statusLoop
 
 	midnaUnlocked          bool
+	midnaDefaultSink       string
 	michaelPhoneExpiration time.Time
 	leaPhoneExpiration     time.Time
 
@@ -47,6 +48,9 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		}
 		l.leaPhoneExpiration = lease.Expiration
 
+	case "github.com/stapelberg/defaultsink2mqtt/default_sink":
+		l.midnaDefaultSink = string(ev.Payload.([]byte))
+
 	default:
 		return nil // event did not influence our state
 	}
@@ -57,9 +61,9 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	phoneHome := l.michaelPhoneExpiration.After(now) ||
 		l.leaPhoneExpiration.After(now)
 	_ = phoneHome
-	l.statusf("midnaUnlocked=%v", l.midnaUnlocked)
+	l.statusf("midnaUnlocked=%v, midnaDefaultSink=%s", l.midnaUnlocked, l.midnaDefaultSink)
 	payload := "OFF"
-	if l.midnaUnlocked {
+	if l.midnaUnlocked && l.midnaDefaultSink == "alsa_output.pci-0000_00_1f.3.analog-stereo" {
 		payload = "ON"
 	}
 	if l.previous == payload {
