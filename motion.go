@@ -13,6 +13,7 @@ type motionLoop struct {
 	bathroomIgnoreOff   bool
 
 	kitchenIgnoreUntil time.Time
+	kitchenOn          bool
 }
 
 func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -109,6 +110,39 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			},
 		}
 
+	case "shellies/shelly1l-E8DB84AB335F/input_event/0":
+		// Event can be either short or long push:
+		// {"event":"S","event_cnt":79}
+		// {"event":"L","event_cnt":86}
+		var event struct {
+			Event string `json:"event"`
+		}
+		if err := json.Unmarshal(ev.Payload.([]byte), &event); err != nil {
+			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+		if event.Event != "S" {
+			return nil
+		}
+		// Toggle both kitchen lights (ceiling and LED)
+		//
+		// Previously, the Shelly was configured as follows:
+		// Button 1 Short Pressed Url: http://localhost/relay/0?turn=toggle
+		command := "on"
+		if l.kitchenOn {
+			command = "off"
+		}
+		return []MQTTPublish{
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/kitchen/" + command,
+				Payload: "{}",
+			},
+			{
+				Topic:   "github.com/stapelberg/hue2mqtt/cmd/light/kitchen/" + command,
+				Payload: "{}",
+			},
+		}
+
 	case "shellies/shelly1l-E8DB84AB335F/longpush/0":
 		if string(ev.Payload.([]byte)) != "1" {
 			return nil
@@ -116,6 +150,11 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		// long press turns off motion control for 10 minutes
 		l.kitchenIgnoreUntil = ev.Timestamp.Add(10 * time.Minute)
 		l.statusf("[kitchen] not turning on light from motion until %v", l.kitchenIgnoreUntil)
+		return nil
+
+	case "shellies/shelly1l-E8DB84AB335F/relay/0":
+		l.kitchenOn = string(ev.Payload.([]byte)) == "on"
+		l.statusf("kitchen light on=%v", l.kitchenOn)
 		return nil
 
 	case "github.com/stapelberg/shelly2mqtt/motion/kitchen":
