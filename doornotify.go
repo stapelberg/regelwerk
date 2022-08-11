@@ -41,10 +41,10 @@ func (l *doorNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	}()
 
 	titlefmt := "%s-Tür"
-	body := "<i>jetzt geöffnet</li>"
+	body := "<i>jetzt geöffnet</i>"
 	icon := "/home/michael/zkj-workspace-switcher/door-open-solid.png"
 	if !jev.Onoff {
-		body = "<i>jetzt geschlossen</li>"
+		body = "<i>jetzt geschlossen</i>"
 		icon = "/home/michael/zkj-workspace-switcher/door-closed-solid.png"
 	}
 	title := fmt.Sprintf(titlefmt, name)
