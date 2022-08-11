@@ -30,8 +30,8 @@ type AddressTokenApiService service
 /*
 AddressTokenApiService Gives some info about address token
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id The token id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param id The token id
 
 @return AddressTokenInfo
 */
@@ -132,8 +132,8 @@ func (a *AddressTokenApiService) Get(ctx context.Context, id string) (AddressTok
 /*
 AddressTokenApiService Gives an redeemed address token
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id The token id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param id The token id
 
 @return AddressToken
 */
@@ -221,8 +221,8 @@ func (a *AddressTokenApiService) Get_1(ctx context.Context, id string) (AddressT
 /*
 AddressTokenApiService Get a list of address tokens
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param addressId The address id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param addressId The address id
 
 @return []AddressToken
 */

@@ -29,7 +29,7 @@ type AccountSubscriptionApiService service
 /*
 AccountSubscriptionApiService Get a list of account subscriptions
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return []AccountSubscription
 */
@@ -116,7 +116,7 @@ func (a *AccountSubscriptionApiService) Get(ctx context.Context) ([]AccountSubsc
 /*
 AccountSubscriptionApiService Starts a payment for an account and returns a payment url
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return string
 */
@@ -203,10 +203,8 @@ func (a *AccountSubscriptionApiService) Post(ctx context.Context) (string, *http
 /*
 AccountSubscriptionApiService Activates a previously terminated subscription
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id The account subscription unique id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param id The account subscription unique id
 */
 func (a *AccountSubscriptionApiService) Post_1(ctx context.Context, id string) (*http.Response, error) {
 	var (
@@ -272,10 +270,8 @@ func (a *AccountSubscriptionApiService) Post_1(ctx context.Context, id string) (
 /*
 AccountSubscriptionApiService Terminates a running subscription
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param id The account subscription unique id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param id The account subscription unique id
 */
 func (a *AccountSubscriptionApiService) Post_2(ctx context.Context, id string) (*http.Response, error) {
 	var (

@@ -29,7 +29,7 @@ type SubscriptionApiService service
 /*
 SubscriptionApiService Get a list of subscriptions
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return []Subscription
 */
@@ -116,8 +116,8 @@ func (a *SubscriptionApiService) Get(ctx context.Context) ([]Subscription, *http
 /*
 SubscriptionApiService Get a subscription
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param subscriptionId The subscription id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param subscriptionId The subscription id
 
 @return Subscription
 */

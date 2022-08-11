@@ -29,8 +29,8 @@ type ServiceApiService service
 /*
 ServiceApiService Get a service
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param serviceId The service id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param serviceId The service id
 
 @return Service
 */
@@ -118,8 +118,8 @@ func (a *ServiceApiService) Get(ctx context.Context, serviceId string) (Service,
 /*
 ServiceApiService Links a service
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param serviceId The service id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param serviceId The service id
 
 @return string
 */
@@ -207,10 +207,8 @@ func (a *ServiceApiService) Post(ctx context.Context, serviceId string) (string,
 /*
 ServiceApiService Syncs a service
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param serviceId The service id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param serviceId The service id
 */
 func (a *ServiceApiService) Post_1(ctx context.Context, serviceId string) (*http.Response, error) {
 	var (
@@ -276,10 +274,8 @@ func (a *ServiceApiService) Post_1(ctx context.Context, serviceId string) (*http
 /*
 ServiceApiService Unlinks a service
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param serviceId The service id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param serviceId The service id
 */
 func (a *ServiceApiService) Post_2(ctx context.Context, serviceId string) (*http.Response, error) {
 	var (

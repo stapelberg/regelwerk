@@ -30,10 +30,8 @@ type AccountUserApiService service
 /*
 AccountUserApiService Deletes asynchronous an account user
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param accountUserId The account user id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param accountUserId The account user id
 */
 func (a *AccountUserApiService) Delete(ctx context.Context, accountUserId int32) (*http.Response, error) {
 	var (
@@ -196,8 +194,8 @@ func (a *AccountUserApiService) Get(ctx context.Context, localVarOptionals *Acco
 /*
 AccountUserApiService Get an account user
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param accountUserId The account user id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param accountUserId The account user id
 
 @return AccountUser
 */
@@ -285,9 +283,9 @@ func (a *AccountUserApiService) Get_1(ctx context.Context, accountUserId int32) 
 /*
 AccountUserApiService Update an account user
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account update representation
- * @param accountUserId The account user id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account update representation
+  - @param accountUserId The account user id
 
 @return AccountUser
 */
@@ -377,8 +375,8 @@ func (a *AccountUserApiService) Post(ctx context.Context, body AccountUserUpdate
 /*
 AccountUserApiService Create an account user
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account sub create representation
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account sub create representation
 
 @return AccountUser
 */

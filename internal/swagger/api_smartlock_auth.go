@@ -30,10 +30,8 @@ type SmartlockAuthApiService service
 /*
 SmartlockAuthApiService Deletes smartlock authorizations asynchronously
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization IDS to delete
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization IDS to delete
 */
 func (a *SmartlockAuthApiService) Delete(ctx context.Context, body []string) (*http.Response, error) {
 	var (
@@ -100,11 +98,9 @@ func (a *SmartlockAuthApiService) Delete(ctx context.Context, body []string) (*h
 /*
 SmartlockAuthApiService Deletes asynchronous a smartlock authorization
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param smartlockId The smartlock id
- * @param id The smartlock authorization unique id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param smartlockId The smartlock id
+  - @param id The smartlock authorization unique id
 */
 func (a *SmartlockAuthApiService) Delete_1(ctx context.Context, smartlockId int32, id string) (*http.Response, error) {
 	var (
@@ -372,9 +368,9 @@ func (a *SmartlockAuthApiService) Get_2(ctx context.Context, smartlockId int32, 
 /*
 SmartlockAuthApiService Get a smartlock authorization
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param smartlockId The smartlock id
- * @param id The smartlock auth unique id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param smartlockId The smartlock id
+  - @param id The smartlock auth unique id
 
 @return SmartlockAuth
 */
@@ -463,10 +459,8 @@ func (a *SmartlockAuthApiService) Get_3(ctx context.Context, smartlockId int32, 
 /*
 SmartlockAuthApiService Updates smartlock authorizations asynchronously
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization update representations
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization update representations
 */
 func (a *SmartlockAuthApiService) Post(ctx context.Context, body []SmartlockAuthMultiUpdate) (*http.Response, error) {
 	var (
@@ -533,12 +527,10 @@ func (a *SmartlockAuthApiService) Post(ctx context.Context, body []SmartlockAuth
 /*
 SmartlockAuthApiService Updates asynchronous a smartlock authorization
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization update representation
- * @param smartlockId The smartlock id
- * @param id The smartlock authorization unique id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization update representation
+  - @param smartlockId The smartlock id
+  - @param id The smartlock authorization unique id
 */
 func (a *SmartlockAuthApiService) Post_4(ctx context.Context, body SmartlockAuthUpdate, smartlockId int32, id string) (*http.Response, error) {
 	var (
@@ -607,10 +599,8 @@ func (a *SmartlockAuthApiService) Post_4(ctx context.Context, body SmartlockAuth
 /*
 SmartlockAuthApiService Creates asynchronous smartlock authorizations
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization create representation
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization create representation
 */
 func (a *SmartlockAuthApiService) Put(ctx context.Context, body SmartlocksAuthCreate) (*http.Response, error) {
 	var (
@@ -677,11 +667,9 @@ func (a *SmartlockAuthApiService) Put(ctx context.Context, body SmartlocksAuthCr
 /*
 SmartlockAuthApiService Creates asynchronous a smartlock authorization
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization create representation
- * @param smartlockId The smartlock id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization create representation
+  - @param smartlockId The smartlock id
 */
 func (a *SmartlockAuthApiService) Put_5(ctx context.Context, body SmartlockAuthCreate, smartlockId int32) (*http.Response, error) {
 	var (

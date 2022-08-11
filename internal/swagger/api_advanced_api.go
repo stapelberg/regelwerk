@@ -29,9 +29,9 @@ type AdvancedApiApiService service
 /*
 AdvancedApiApiService Smartlock Action with Callback
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock action representation
- * @param smartlockId The smartlock id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock action representation
+  - @param smartlockId The smartlock id
 
 @return AdvancedConfirmationResponse
 */
@@ -121,8 +121,8 @@ func (a *AdvancedApiApiService) Action(ctx context.Context, body SmartlockAction
 /*
 AdvancedApiApiService Lock a smartlock
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param smartlockId The smartlock id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param smartlockId The smartlock id
 
 @return AdvancedConfirmationResponse
 */
@@ -210,8 +210,8 @@ func (a *AdvancedApiApiService) PostLock(ctx context.Context, smartlockId string
 /*
 AdvancedApiApiService Unlock a smartlock
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param smartlockId The smartlock id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param smartlockId The smartlock id
 
 @return AdvancedConfirmationResponse
 */
@@ -299,8 +299,8 @@ func (a *AdvancedApiApiService) PostLock_1(ctx context.Context, smartlockId stri
 /*
 AdvancedApiApiService Creates asynchronous smartlock authorizations
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Smartlock authorization create representation
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Smartlock authorization create representation
 
 @return AdvancedConfirmationResponse
 */

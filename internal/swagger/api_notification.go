@@ -30,10 +30,8 @@ type NotificationApiService service
 /*
 NotificationApiService Delete a notification configuration
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param notificationId The unique notification ID
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param notificationId The unique notification ID
 */
 func (a *NotificationApiService) Delete(ctx context.Context, notificationId string) (*http.Response, error) {
 	var (
@@ -196,8 +194,8 @@ func (a *NotificationApiService) Get(ctx context.Context, localVarOptionals *Not
 /*
 NotificationApiService Get a notification configuration
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param notificationId The unique notification ID
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param notificationId The unique notification ID
 
 @return Notification
 */
@@ -285,9 +283,9 @@ func (a *NotificationApiService) Get_1(ctx context.Context, notificationId strin
 /*
 NotificationApiService Update a notification configuration
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Notification update representation
- * @param notificationId The unique notification ID
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Notification update representation
+  - @param notificationId The unique notification ID
 
 @return Notification
 */
@@ -377,8 +375,8 @@ func (a *NotificationApiService) Post(ctx context.Context, body Notification, no
 /*
 NotificationApiService Create a notification configuration
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Notification representation
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Notification representation
 
 @return Notification
 */

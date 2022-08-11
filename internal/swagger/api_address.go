@@ -29,7 +29,7 @@ type AddressApiService service
 /*
 AddressApiService Get a list of addresses
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return []Address
 */
@@ -116,11 +116,9 @@ func (a *AddressApiService) Get(ctx context.Context) ([]Address, *http.Response,
 /*
 AddressApiService Update an address
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Address update representation
- * @param addressId The address id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Address update representation
+  - @param addressId The address id
 */
 func (a *AddressApiService) Post(ctx context.Context, body AddressUpdate, addressId int32) (*http.Response, error) {
 	var (

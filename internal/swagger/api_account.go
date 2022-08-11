@@ -30,9 +30,7 @@ type AccountApiService service
 /*
 AccountApiService Delete an account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *AccountApiService) Delete(ctx context.Context) (*http.Response, error) {
 	var (
@@ -97,9 +95,7 @@ func (a *AccountApiService) Delete(ctx context.Context) (*http.Response, error) 
 /*
 AccountApiService Disables one time password for an account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *AccountApiService) Delete_1(ctx context.Context) (*http.Response, error) {
 	var (
@@ -164,9 +160,7 @@ func (a *AccountApiService) Delete_1(ctx context.Context) (*http.Response, error
 /*
 AccountApiService Delete an account setting
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *AccountApiService) Delete_2(ctx context.Context) (*http.Response, error) {
 	var (
@@ -231,10 +225,8 @@ func (a *AccountApiService) Delete_2(ctx context.Context) (*http.Response, error
 /*
 AccountApiService Delete an sub account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param accountId The account id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param accountId The account id
 */
 func (a *AccountApiService) Delete_3(ctx context.Context, accountId int32) (*http.Response, error) {
 	var (
@@ -300,7 +292,7 @@ func (a *AccountApiService) Delete_3(ctx context.Context, accountId int32) (*htt
 /*
 AccountApiService Get an account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return MyAccount
 */
@@ -387,7 +379,7 @@ func (a *AccountApiService) Get(ctx context.Context) (MyAccount, *http.Response,
 /*
 AccountApiService Get account setting
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return AccountSetting
 */
@@ -571,8 +563,8 @@ func (a *AccountApiService) Get_5(ctx context.Context, localVarOptionals *Accoun
 /*
 AccountApiService Get an sub account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param accountId The account id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param accountId The account id
 
 @return Account
 */
@@ -740,10 +732,8 @@ func (a *AccountApiService) Post(ctx context.Context, body AccountUpdate, localV
 /*
 AccountApiService Enables one time password for an account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account one time password enable representation
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account one time password enable representation
 */
 func (a *AccountApiService) Post_7(ctx context.Context, body AccountOtpEnable) (*http.Response, error) {
 	var (
@@ -810,10 +800,8 @@ func (a *AccountApiService) Post_7(ctx context.Context, body AccountOtpEnable) (
 /*
 AccountApiService Reset account password
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account password reset representation
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account password reset representation
 */
 func (a *AccountApiService) Post_8(ctx context.Context, body AccountPasswordReset) (*http.Response, error) {
 	var (
@@ -893,11 +881,9 @@ func (a *AccountApiService) Post_8(ctx context.Context, body AccountPasswordRese
 /*
 AccountApiService Update an sub account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account update representation
- * @param accountId The account id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account update representation
+  - @param accountId The account id
 */
 func (a *AccountApiService) Post_9(ctx context.Context, body AccountSubUpdate, accountId int32) (*http.Response, error) {
 	var (
@@ -965,10 +951,8 @@ func (a *AccountApiService) Post_9(ctx context.Context, body AccountSubUpdate, a
 /*
 AccountApiService Create an account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account create representation
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account create representation
 */
 func (a *AccountApiService) Put(ctx context.Context, body AccountCreate) (*http.Response, error) {
 	var (
@@ -1048,7 +1032,7 @@ func (a *AccountApiService) Put(ctx context.Context, body AccountCreate) (*http.
 /*
 AccountApiService Create an one time password secret
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return string
 */
@@ -1135,8 +1119,8 @@ func (a *AccountApiService) Put_10(ctx context.Context) (string, *http.Response,
 /*
 AccountApiService Create or update account setting
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account setting representation
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account setting representation
 
 @return AccountSetting
 */
@@ -1225,8 +1209,8 @@ func (a *AccountApiService) Put_11(ctx context.Context, body AccountSetting) (Ac
 /*
 AccountApiService Create an sub account
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param body Account sub create representation
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param body Account sub create representation
 
 @return MyAccount
 */

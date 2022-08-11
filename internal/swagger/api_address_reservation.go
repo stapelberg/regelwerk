@@ -29,8 +29,8 @@ type AddressReservationApiService service
 /*
 AddressReservationApiService Get a list of address reservations
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param addressId The address id
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param addressId The address id
 
 @return []AddressReservation
 */
@@ -118,11 +118,9 @@ func (a *AddressReservationApiService) Get(ctx context.Context, addressId int32)
 /*
 AddressReservationApiService Issues authorizations for an address reservation
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param addressId The address id
- * @param id The address reservation id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param addressId The address id
+  - @param id The address reservation id
 */
 func (a *AddressReservationApiService) Post(ctx context.Context, addressId int32, id string) (*http.Response, error) {
 	var (
@@ -189,11 +187,9 @@ func (a *AddressReservationApiService) Post(ctx context.Context, addressId int32
 /*
 AddressReservationApiService Revoke authorizations for an address reservation
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param addressId The address id
- * @param id The address reservation id
-
-
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param addressId The address id
+  - @param id The address reservation id
 */
 func (a *AddressReservationApiService) Post_1(ctx context.Context, addressId int32, id string) (*http.Response, error) {
 	var (

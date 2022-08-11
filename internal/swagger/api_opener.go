@@ -30,7 +30,7 @@ type OpenerApiService service
 /*
 OpenerApiService Get all intercom brands
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return []OpenerIntercomBrand
 */
@@ -117,8 +117,8 @@ func (a *OpenerApiService) Get(ctx context.Context) ([]OpenerIntercomBrand, *htt
 /*
 OpenerApiService Get an intercom brand
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param brandId The brand ID
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param brandId The brand ID
 
 @return OpenerIntercomBrand
 */
@@ -313,8 +313,8 @@ func (a *OpenerApiService) Get_2(ctx context.Context, localVarOptionals *OpenerA
 /*
 OpenerApiService Get an intercom model
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param intercomId The intercom ID
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param intercomId The intercom ID
 
 @return OpenerIntercomModel
 */

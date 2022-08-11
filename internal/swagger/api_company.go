@@ -28,7 +28,7 @@ type CompanyApiService service
 /*
 CompanyApiService Get an list of companies
 
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 
 @return []Company
 */
