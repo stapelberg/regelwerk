@@ -10,4 +10,5 @@ var loops = []controlLoop{
 	&nukiRTOLoop{},
 	&shellyEnergyMeterLoop{},
 	&motionLoop{},
+	&mystromSwitchLoop{},
 }
