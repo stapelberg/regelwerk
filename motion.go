@@ -47,6 +47,23 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			},
 		}
 
+	case "shellies/shelly1l-84CCA8ADE1F0/longpush/0":
+		if string(ev.Payload.([]byte)) != "1" {
+			return nil
+		}
+		// long press in hallway turns off all lights
+		l.statusf("hallway: turning off all lights")
+		return []MQTTPublish{
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/kitchen/off",
+				Payload: "{}",
+			},
+			{
+				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/bathroom/off",
+				Payload: "{}",
+			},
+		}
+
 	case "shellies/shelly1l-84CCA8AE3855/longpush/0":
 		if string(ev.Payload.([]byte)) != "1" {
 			return nil
