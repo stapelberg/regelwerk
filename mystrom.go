@@ -21,6 +21,14 @@ func init() {
 
 type mystromSwitchLoop struct {
 	statusLoop
+
+	lastPower map[string]float64
+}
+
+func newMystromSwitchLoop() *mystromSwitchLoop {
+	return &mystromSwitchLoop{
+		lastPower: make(map[string]float64),
+	}
 }
 
 func (l *mystromSwitchLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
@@ -42,7 +50,14 @@ func (l *mystromSwitchLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil
 	}
 
-	switchPower.With(prometheus.Labels{"name": name}).Set(report.Power)
+	l.lastPower[name] = report.Power
+
+	power := report.Power
+	if name == "living" {
+		// pacna is wired behind living, so subtract it out for easier graphing
+		power -= l.lastPower["pacna"]
+	}
+	switchPower.With(prometheus.Labels{"name": name}).Set(power)
 
 	return nil
 }
