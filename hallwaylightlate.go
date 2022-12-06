@@ -36,8 +36,15 @@ func (l *hallwayLightLate) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	// separate piece of code
 	now := ev.Timestamp
 	hour := now.Hour()
-	on := hour >= 17
-	l.statusf("%v == (hour=%v > 17)", on, hour)
+	threshold := 17
+	if now.Month() == time.May ||
+		now.Month() == time.June ||
+		now.Month() == time.July ||
+		now.Month() == time.August {
+		threshold = 19
+	}
+	on := hour >= threshold
+	l.statusf("%v == (hour=%v > %v)", on, hour, threshold)
 	if !on {
 		return nil
 	}
