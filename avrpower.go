@@ -51,6 +51,25 @@ func (l *avrPowerLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	case "github.com/stapelberg/defaultsink2mqtt/default_sink":
 		l.midnaDefaultSink = string(ev.Payload.([]byte))
 
+	case "$SYS/broker/connection/clients/https://github.com/stapelberg/defaultsink2mqtt@midna":
+		// example: {
+		//   "clientID":"https://github.com/stapelberg/defaultsink2mqtt@midna",
+		//   "online":false,
+		//   "timestamp":"2023-01-22T11:42:26Z"
+		// }
+		var connectionEvent struct {
+			Online bool `json:"online"`
+		}
+		if err := json.Unmarshal(ev.Payload.([]byte), &connectionEvent); err != nil {
+			l.statusf("unmarshaling connection event: %v", err)
+			return nil
+		}
+		if !connectionEvent.Online {
+			// When defaultsink2mqtt goes offline, that’s most likely because
+			// midna suspended.
+			l.midnaUnlocked = false
+		}
+
 	default:
 		return nil // event did not influence our state
 	}
