@@ -45,6 +45,10 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 				Topic:   "github.com/stapelberg/shelly2mqtt/cmd/relay/bathroom/off",
 				Payload: "{}",
 			},
+			{
+				Topic:   "github.com/stapelberg/zkj-nas-tools/dornroeschen/cmd/suspendnas/storage2",
+				Payload: "suspend",
+			},
 		}
 
 	case "shellies/shelly1l-84CCA8ADE1F0/longpush/0":
