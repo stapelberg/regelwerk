@@ -51,7 +51,7 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			},
 		}
 
-	case "shellies/shelly1l-84CCA8ADE1F0/longpush/0":
+	case "shellies/shelly1l-98CDAC1EFC56/longpush/0":
 		if string(ev.Payload.([]byte)) != "1" {
 			return nil
 		}
