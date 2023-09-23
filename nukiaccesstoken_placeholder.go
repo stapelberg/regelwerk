@@ -1,5 +1,4 @@
 //go:build linux && !rw_midna && !gokrazy
-// +build linux,!rw_midna,!gokrazy
 
 package main
 
