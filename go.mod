@@ -1,6 +1,6 @@
 module github.com/stapelberg/regelwerk
 
-go 1.17
+go 1.21
 
 require (
 	github.com/antihax/optional v1.0.0
