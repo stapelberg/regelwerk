@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/sideshow/apns2/payload"
 )
@@ -24,7 +25,9 @@ func (l *doorNotifyAPNSLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		return nil // event did not influence our state
 	}
 
-	// TODO: restrict to Mondays
+	if ev.Timestamp.Weekday() != time.Monday {
+		return nil // only notify on Mondays
+	}
 
 	var jev struct {
 		Onoff bool `json:"onoff"`
