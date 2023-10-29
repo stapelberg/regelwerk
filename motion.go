@@ -100,7 +100,7 @@ func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 			return nil
 		}
 
-		if hour := ev.Timestamp.Hour(); hour < 6 {
+		if hour := ev.Timestamp.Hour(); l.bathroomRelayLast == "off" && hour < 6 {
 			l.statusf("[bathroom] ignoring motion event between 23:59 and 06:00 (currently: hour=%d)", hour)
 			return nil
 		}
