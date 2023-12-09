@@ -8,15 +8,25 @@ import (
 )
 
 // prometheus metrics
-var switchPower = prometheus.NewGaugeVec(
-	prometheus.GaugeOpts{
-		Name: "switch_power_watts",
-		Help: "TODO",
-	},
-	[]string{"name"})
+var (
+	switchPower = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "switch_power_watts",
+			Help: "TODO",
+		},
+		[]string{"name"})
+
+	switchTemperature = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "switch_temperature_degc",
+			Help: "TODO",
+		},
+		[]string{"name"})
+)
 
 func init() {
 	prometheus.MustRegister(switchPower)
+	prometheus.MustRegister(switchTemperature)
 }
 
 type mystromSwitchLoop struct {
@@ -57,7 +67,9 @@ func (l *mystromSwitchLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		// pacna is wired behind living, so subtract it out for easier graphing
 		power -= l.lastPower["pacna"]
 	}
-	switchPower.With(prometheus.Labels{"name": name}).Set(power)
+	nameLabel := prometheus.Labels{"name": name}
+	switchPower.With(nameLabel).Set(power)
+	switchTemperature.With(nameLabel).Set(report.Temperature)
 
 	return nil
 }
