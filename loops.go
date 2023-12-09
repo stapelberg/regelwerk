@@ -11,4 +11,5 @@ var loops = []controlLoop{
 	&motionLoop{},
 	newMystromSwitchLoop(),
 	&doorNotifyAPNSLoop{},
+	newBlrCamLoop(),
 }
