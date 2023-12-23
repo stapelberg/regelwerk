@@ -19,6 +19,12 @@ var blrCamLastAck = prometheus.NewGauge(
 
 func init() {
 	prometheus.MustRegister(blrCamLastAck)
+	// Initialize the last ack to the current time, not to zero.
+	// A timestamp of zero results in spurious alerts depending
+	// on the scrape timeline, whereas a spurious last ack timestamp
+	// on restart is the lesser evil without consequences, other
+	// than maybe a jump in the dashboard.
+	blrCamLastAck.Set(float64(time.Now().Unix()))
 }
 
 type blrCamLoop struct {
