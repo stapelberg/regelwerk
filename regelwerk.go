@@ -225,7 +225,7 @@ func playSound() error {
 	}
 	// play notification sound to the bluetooth headphones, if connected
 	play := exec.Command("pacat",
-		"--device=bluez_sink.94_DB_56_5F_C8_1B.a2dp_sink",
+		"--device=bluez_sink.AC_80_0A_E6_82_94.a2dp_sink",
 		"--file-format=wav",
 		"/home/michael/Downloads/super_mario_bros_sounds/smb_pause.wav")
 	play.Stderr = os.Stderr

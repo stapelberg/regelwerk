@@ -74,7 +74,7 @@ func TestAvrPowerLoop(t *testing.T) {
 			t.Errorf("unexpected MQTT publication: diff (-want +got):\n%s", diff)
 		}
 
-		got = setDefaultSink(t, l, "bluez_sink.94_DB_56_5F_C8_1B.a2dp_sink")
+		got = setDefaultSink(t, l, "bluez_sink.AC_80_0A_E6_82_94.a2dp_sink")
 		want = []MQTTPublish{
 			{
 				Topic:    "cmnd/tasmota_68462F/Power",
