@@ -98,10 +98,18 @@ func (l *nukiNotifyLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 
 	// https://developer.nuki.io/page/nuki-bridge-http-api-1-12/4#heading--lockstate
 
+	ring, body := l.interpreter.processCallback(&cb)
+
+	// Dump Nuki notifications into a file and display them in i3status, for now.
+	err := os.WriteFile("/run/user/1000/i3status/nuki.temp", []byte(body), 0644)
+	if err != nil {
+		log.Print(err)
+	}
+	return nil
+
 	args := []string{
 		"--icon=/home/michael/zkj-workspace-switcher/bell-solid.png",
 	}
-	ring, body := l.interpreter.processCallback(&cb)
 	if ring {
 		args = append(args, "--action=open,Open")
 	}
