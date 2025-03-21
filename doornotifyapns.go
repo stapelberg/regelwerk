@@ -21,6 +21,16 @@ func (l *doorNotifyAPNSLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	case "github.com/stapelberg/shelly2mqtt/door/living":
 		return nil
 
+	case "debug/apns":
+		title := "regelwerk apns test title"
+		body := "regelwerk apns test body"
+		name = "debug"
+		err := applePush(payload.NewPayload().AlertTitle(title).AlertBody(body).ThreadID("door/" + name))
+		if err != nil {
+			l.statusf("%v", err)
+			return nil
+		}
+
 	default:
 		return nil // event did not influence our state
 	}
