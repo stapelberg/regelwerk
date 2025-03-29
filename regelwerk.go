@@ -166,7 +166,9 @@ type mqttMessageHandler struct {
 }
 
 func (h *mqttMessageHandler) handle(_ mqtt.Client, m mqtt.Message) {
-	log.Printf("MQTT: %s %s", m.Topic(), m.Payload())
+	if logMQTT {
+		log.Printf("MQTT: %s %s", m.Topic(), m.Payload())
+	}
 	ev := MQTTEvent{
 		Timestamp: time.Now(), // consistent for all loops
 		Topic:     m.Topic(),

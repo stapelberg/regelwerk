@@ -2,6 +2,8 @@
 
 package main
 
+var logMQTT = false
+
 var loops = []controlLoop{
 	&doorNotifyLoop{},
 	&nukiNotifyLoop{},

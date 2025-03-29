@@ -2,6 +2,8 @@
 
 package main
 
+var logMQTT = true
+
 var loops = []controlLoop{
 	&avrPowerLoop{},
 	&hallwayLightDoor{},
