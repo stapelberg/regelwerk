@@ -23,7 +23,7 @@ func (l *ringNotify) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 		}
 	}()
 
-	body := "<i>jetzt geklingelt (" + string(ev.Payload.([]byte)) + ")</li>"
+	body := "<i>jetzt geklingelt (" + string(ev.Payload.([]byte)) + ")</i>"
 	icon := "/home/michael/zkj-workspace-switcher/bell-solid.png"
 	title := "Türklingel!"
 	dunstify := exec.Command(
