@@ -2,8 +2,22 @@ package main
 
 import (
 	"encoding/json"
+	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus"
 )
+
+var motionBattery = prometheus.NewGaugeVec(
+	prometheus.GaugeOpts{
+		Name: "shelly_motion_battery",
+		Help: "TODO",
+	},
+	[]string{"device"})
+
+func init() {
+	prometheus.MustRegister(motionBattery)
+}
 
 type motionLoop struct {
 	statusLoop
@@ -18,6 +32,20 @@ type motionLoop struct {
 
 func (l *motionLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch ev.Topic {
+	case "shellies/shellymotionsensor-60A423BEB736/status", // kitchen
+		"shellies/shellymotionsensor-588E81A63297/status": // bad
+		// Example: shellies/shellymotionsensor-60A423BEB736/status {"motion":true,"timestamp":1757604717,"active":true,"vibration":false,"lux":70,"bat":67}
+		var status struct {
+			Bat float64 `json:"bat"`
+		}
+		if err := json.Unmarshal(ev.Payload.([]byte), &status); err != nil {
+			l.statusf("json.Unmarshal: %v", err)
+			return nil
+		}
+		device := strings.TrimSuffix(strings.TrimPrefix(ev.Topic, "shellies/shellymotionsensor-"), "/status")
+		motionBattery.With(prometheus.Labels{"device": device}).Set(status.Bat)
+		return nil
+
 	case "github.com/stapelberg/hue2mqtt/sensors/33",
 		"github.com/stapelberg/hue2mqtt/sensors/20":
 		var event struct {
