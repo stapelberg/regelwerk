@@ -12,6 +12,7 @@ var loops = []controlLoop{
 	&shellyEnergyMeterLoop{},
 	&motionLoop{},
 	newMystromSwitchLoop(),
+	newSmartplugLoop(),
 	&doorNotifyAPNSLoop{},
 	newBlrCamLoop(),
 }
