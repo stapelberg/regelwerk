@@ -34,6 +34,8 @@ func (l *smartplugLoop) ProcessEvent(ev MQTTEvent) []MQTTPublish {
 	switch name {
 	case "smartplug-575965":
 		name = "monitor"
+	case "smartplug-575215":
+		name = "storage3"
 	default:
 		l.statusf("ignoring unknown smartplug (no name configured): %v", name)
 		return nil
